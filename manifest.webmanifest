@@ -1,0 +1,16 @@
+{
+  "name": "Roads & Solutions S.A.",
+  "short_name": "R&S Roads",
+  "description": "Seguridad vial, Flex Beam, construccion y equipo especializado en Costa Rica.",
+  "start_url": "/road/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": [
+    {
+      "src": "assets/logo-roads-solutions.jpeg",
+      "sizes": "512x251",
+      "type": "image/jpeg"
+    }
+  ]
+}
