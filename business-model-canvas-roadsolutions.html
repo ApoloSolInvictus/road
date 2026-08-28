@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="es-CR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Business Model Canvas - Roads & Solutions S.A.</title>
+    <meta
+      name="description"
+      content="Business Model Canvas local para aumentar ventas de Roads & Solutions S.A. en Costa Rica y Centroamerica."
+    />
+    <link rel="icon" href="assets/logo-roads-solutions.jpeg" />
+    <link rel="apple-touch-icon" href="assets/logo-roads-solutions.jpeg" />
+    <meta property="og:type" content="article" />
+    <meta property="og:locale" content="es_CR" />
+    <meta property="og:title" content="Business Model Canvas - Roads & Solutions S.A." />
+    <meta
+      property="og:description"
+      content="Modelo de negocio para aumentar ventas de Roads & Solutions S.A. en Costa Rica y Centroamerica."
+    />
+    <meta property="og:image" content="https://roadsolutionscr.wstudio3d.com/assets/hero-road-solutions.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://roadsolutionscr.wstudio3d.com/assets/hero-road-solutions.png" />
+    <style>
+      :root {
+        --black: #050505;
+        --ink: #101113;
+        --panel: #15171c;
+        --panel-soft: #1d2027;
+        --line: rgba(255, 255, 255, 0.14);
+        --text: #f4f6f8;
+        --muted: #b8bdc5;
+        --gold: #f4b719;
+        --gold-dark: #bd7b10;
+        --steel: #aeb4bd;
+        --paper: #f7f4ec;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        background:
+          linear-gradient(90deg, rgba(244, 183, 25, 0.05) 1px, transparent 1px),
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          var(--black);
+        background-size: 64px 64px;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .page {
+        width: min(1500px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 26px 0 56px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 14px 0;
+        background: linear-gradient(180deg, rgba(5, 5, 5, 0.96), rgba(5, 5, 5, 0.76));
+        backdrop-filter: blur(16px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        min-width: 0;
+      }
+
+      .brand img {
+        width: clamp(116px, 15vw, 210px);
+        height: auto;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: clamp(1.25rem, 3vw, 3rem);
+        line-height: 0.95;
+        letter-spacing: 0;
+      }
+
+      .brand p {
+        margin: 8px 0 0;
+        color: var(--gold);
+        font-size: 0.78rem;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .doc-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 0 0 18px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        background: rgba(5, 5, 5, 0.72);
+      }
+
+      .doc-links a {
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        padding: 8px 11px;
+        color: rgba(255, 255, 255, 0.78);
+        text-decoration: none;
+        font-size: 0.82rem;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .doc-links a:first-child {
+        color: #080808;
+        border-color: transparent;
+        background: linear-gradient(135deg, var(--gold), #ffe18a 46%, var(--gold-dark));
+      }
+
+      .btn {
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 10px 14px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.06);
+        cursor: pointer;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .btn.primary {
+        border-color: transparent;
+        color: #080808;
+        background: linear-gradient(135deg, var(--gold), #ffe18a 46%, var(--gold-dark));
+      }
+
+      .hero {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        min-height: 360px;
+        display: grid;
+        grid-template-columns: 1fr 0.78fr;
+        gap: clamp(24px, 5vw, 70px);
+        align-items: end;
+        margin: 16px 0 22px;
+        padding: clamp(26px, 5vw, 58px);
+        border: 1px solid var(--line);
+        background: #101113;
+      }
+
+      .hero::before {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        content: "";
+        background:
+          linear-gradient(90deg, rgba(0, 0, 0, 0.96), rgba(0, 0, 0, 0.64) 50%, rgba(0, 0, 0, 0.28)),
+          url("assets/hero-road-solutions.png") center / cover;
+        filter: saturate(0.92) contrast(1.1);
+      }
+
+      .hero::after {
+        position: absolute;
+        inset: auto 0 0;
+        z-index: -1;
+        height: 45%;
+        content: "";
+        background: linear-gradient(0deg, #050505, transparent);
+      }
+
+      .eyebrow,
+      .label {
+        margin: 0 0 10px;
+        color: var(--gold);
+        font-size: 0.76rem;
+        font-weight: 950;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .hero h2 {
+        max-width: 900px;
+        margin: 0 0 18px;
+        font-size: clamp(2.3rem, 5vw, 5.7rem);
+        line-height: 0.91;
+        letter-spacing: 0;
+      }
+
+      .hero .summary {
+        max-width: 780px;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.76);
+        font-size: clamp(1rem, 1.4vw, 1.22rem);
+      }
+
+      .scorecard {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .metric {
+        min-height: 118px;
+        padding: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(5, 5, 5, 0.66);
+      }
+
+      .metric strong {
+        display: block;
+        color: var(--gold);
+        font-size: clamp(1.6rem, 3vw, 2.6rem);
+        line-height: 1;
+      }
+
+      .metric span {
+        display: block;
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.88rem;
+      }
+
+      .canvas-shell {
+        padding: 16px;
+        border: 1px solid rgba(244, 183, 25, 0.34);
+        background:
+          linear-gradient(145deg, rgba(244, 183, 25, 0.08), transparent),
+          rgba(14, 15, 18, 0.94);
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.28);
+      }
+
+      .canvas-meta {
+        display: grid;
+        grid-template-columns: 1.2fr repeat(3, minmax(140px, 0.35fr));
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .meta-box {
+        min-height: 58px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .meta-box b {
+        display: block;
+        color: var(--gold);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+      }
+
+      .meta-box span {
+        display: block;
+        margin-top: 5px;
+        color: rgba(255, 255, 255, 0.84);
+        font-weight: 780;
+      }
+
+      .canvas-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: minmax(300px, auto) minmax(300px, auto) minmax(230px, auto);
+        border: 2px solid rgba(255, 255, 255, 0.26);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .block {
+        min-width: 0;
+        padding: 18px;
+        border-right: 1px solid rgba(255, 255, 255, 0.22);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+          rgba(20, 22, 27, 0.92);
+      }
+
+      .block:nth-child(5),
+      .block:nth-child(7),
+      .block:nth-child(9) {
+        border-right: 0;
+      }
+
+      .block.partners {
+        grid-row: 1 / 3;
+      }
+
+      .block.value {
+        grid-column: 3;
+        grid-row: 1 / 3;
+        background:
+          linear-gradient(180deg, rgba(244, 183, 25, 0.16), rgba(255, 255, 255, 0.035)),
+          rgba(23, 24, 28, 0.96);
+      }
+
+      .block.segments {
+        grid-column: 5;
+        grid-row: 1 / 3;
+      }
+
+      .block.costs {
+        grid-column: 1 / 3;
+        grid-row: 3;
+      }
+
+      .block.revenue {
+        grid-column: 3 / 6;
+        grid-row: 3;
+        border-right: 0;
+      }
+
+      .block h3 {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        margin: 0 0 14px;
+        color: #fff;
+        font-size: 1.08rem;
+        line-height: 1.12;
+      }
+
+      .block h3 span {
+        flex: 0 0 auto;
+        color: var(--gold);
+        font-size: 0.74rem;
+        font-weight: 950;
+      }
+
+      .block ul {
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .block li {
+        position: relative;
+        padding-left: 18px;
+        color: rgba(255, 255, 255, 0.73);
+        font-size: 0.92rem;
+      }
+
+      .block li::before {
+        position: absolute;
+        top: 0.72em;
+        left: 0;
+        width: 8px;
+        height: 2px;
+        content: "";
+        background: var(--gold);
+      }
+
+      .block strong {
+        color: #fff;
+      }
+
+      .growth {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-top: 22px;
+      }
+
+      .panel {
+        padding: 24px;
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+          rgba(18, 19, 23, 0.92);
+      }
+
+      .panel h2 {
+        margin: 0 0 16px;
+        font-size: clamp(1.4rem, 2.6vw, 2.5rem);
+        line-height: 1;
+      }
+
+      .panel h3 {
+        margin: 0 0 8px;
+        color: #fff;
+        font-size: 1.02rem;
+      }
+
+      .panel p,
+      .panel li {
+        color: rgba(255, 255, 255, 0.72);
+      }
+
+      .panel ul,
+      .panel ol {
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .roadmap {
+        grid-column: 1 / -1;
+      }
+
+      .roadmap-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+
+      .roadmap-grid article {
+        min-height: 190px;
+        padding: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .roadmap-grid span {
+        display: inline-grid;
+        min-width: 48px;
+        height: 30px;
+        place-items: center;
+        margin-bottom: 14px;
+        color: #080808;
+        background: var(--gold);
+        font-weight: 950;
+      }
+
+      .kpi-table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+      }
+
+      .kpi-table th,
+      .kpi-table td {
+        padding: 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .kpi-table th {
+        color: var(--gold);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      .kpi-table td {
+        color: rgba(255, 255, 255, 0.74);
+      }
+
+      .download-note {
+        margin: 18px 0 0;
+        color: rgba(255, 255, 255, 0.58);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 1100px) {
+        .topbar,
+        .hero,
+        .growth,
+        .canvas-meta {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar {
+          display: grid;
+          position: static;
+          align-items: flex-start;
+        }
+
+        .actions {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          width: 100%;
+          justify-content: stretch;
+        }
+
+        .doc-links {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .btn {
+          width: 100%;
+        }
+
+        .canvas-grid {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: auto;
+        }
+
+        .block,
+        .block.partners,
+        .block.value,
+        .block.segments,
+        .block.costs,
+        .block.revenue {
+          grid-column: auto;
+          grid-row: auto;
+          border-right: 1px solid rgba(255, 255, 255, 0.22);
+        }
+
+        .block:nth-child(even) {
+          border-right: 0;
+        }
+
+        .roadmap-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 680px) {
+        body {
+          background-size: 42px 42px;
+        }
+
+        .page {
+          width: min(100% - 24px, 1500px);
+          padding: 14px 0 38px;
+        }
+
+        .brand {
+          display: grid;
+          grid-template-columns: 104px minmax(0, 1fr);
+          align-items: start;
+        }
+
+        .brand img {
+          width: 104px;
+        }
+
+        .brand h1 {
+          font-size: 1.12rem;
+          line-height: 1.02;
+        }
+
+        .brand p {
+          font-size: 0.68rem;
+        }
+
+        .actions {
+          grid-template-columns: 1fr;
+        }
+
+        .doc-links {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          min-height: auto;
+          padding: 24px;
+        }
+
+        .hero h2 {
+          font-size: clamp(2rem, 12vw, 3rem);
+        }
+
+        .scorecard,
+        .canvas-grid,
+        .roadmap-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .block,
+        .block:nth-child(even) {
+          border-right: 0;
+        }
+
+        .canvas-shell {
+          padding: 10px;
+        }
+
+        .panel {
+          padding: 20px;
+        }
+
+        .kpi-table,
+        .kpi-table tbody,
+        .kpi-table tr,
+        .kpi-table th,
+        .kpi-table td {
+          display: block;
+        }
+
+        .kpi-table thead {
+          display: none;
+        }
+
+        .kpi-table tr {
+          padding: 12px 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .kpi-table td {
+          border: 0;
+          padding: 5px 0;
+        }
+
+        .kpi-table td::before {
+          display: block;
+          color: var(--gold);
+          font-size: 0.72rem;
+          font-weight: 950;
+          text-transform: uppercase;
+          content: attr(data-label);
+        }
+      }
+
+      @media print {
+        @page {
+          size: A3 landscape;
+          margin: 10mm;
+        }
+
+        body {
+          color: #111;
+          background: #fff;
+        }
+
+        .topbar,
+        .actions,
+        .doc-links,
+        .download-note {
+          position: static;
+        }
+
+        .btn {
+          display: none;
+        }
+
+        .page {
+          width: 100%;
+          padding: 0;
+        }
+
+        .hero,
+        .canvas-shell,
+        .panel,
+        .block,
+        .roadmap-grid article,
+        .meta-box {
+          color: #111;
+          background: #fff;
+          box-shadow: none;
+          break-inside: avoid;
+        }
+
+        .hero::before,
+        .hero::after {
+          display: none;
+        }
+
+        .hero,
+        .growth {
+          grid-template-columns: 1fr;
+        }
+
+        .hero h2,
+        .panel h2,
+        .block h3,
+        .panel h3 {
+          color: #111;
+        }
+
+        .hero .summary,
+        .block li,
+        .panel p,
+        .panel li,
+        .metric span,
+        .kpi-table td {
+          color: #222;
+        }
+
+        .canvas-grid {
+          grid-template-columns: repeat(5, 1fr);
+        }
+
+        .block.partners {
+          grid-row: 1 / 3;
+        }
+
+        .block.value {
+          grid-column: 3;
+          grid-row: 1 / 3;
+        }
+
+        .block.segments {
+          grid-column: 5;
+          grid-row: 1 / 3;
+        }
+
+        .block.costs {
+          grid-column: 1 / 3;
+          grid-row: 3;
+        }
+
+        .block.revenue {
+          grid-column: 3 / 6;
+          grid-row: 3;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">
+          <img src="assets/logo-roads-solutions.jpeg" alt="Roads & Solutions S.A." />
+          <div>
+            <p>Business Model Canvas</p>
+            <h1>Modelo para aumentar ventas en Costa Rica y Centroamerica</h1>
+          </div>
+        </div>
+        <div class="actions" aria-label="Acciones del documento">
+          <button class="btn primary" type="button" data-print>Imprimir / guardar PDF</button>
+          <button class="btn" type="button" data-download>Descargar resumen</button>
+          <button class="btn" type="button" data-copy>Copiar pitch</button>
+        </div>
+      </header>
+
+      <nav class="doc-links" aria-label="Documentos de propuesta">
+        <a href="index.html">Sitio principal</a>
+        <a href="presentacion-propuesta-roadsolutions.html">Presentacion formal</a>
+        <a href="plan-costos-paquete-roadsolutions.html">Plan de costos</a>
+      </nav>
+
+      <section class="hero" aria-label="Resumen ejecutivo">
+        <div>
+          <p class="eyebrow">Enfoque comercial</p>
+          <h2>Convertir servicios viales en contratos recurrentes, paquetes claros y expansion regional.</h2>
+          <p class="summary">
+            Roads & Solutions S.A. puede crecer ventas si transforma su catalogo tecnico en ofertas faciles de
+            comprar: seguridad vial, mantenimiento preventivo, alquiler de equipo con soporte y ejecucion llave en
+            mano para proyectos publicos, privados, industriales y desarrollos inmobiliarios.
+          </p>
+        </div>
+        <div class="scorecard">
+          <div class="metric"><strong>3</strong><span>lineas comerciales: servicios, construccion y alquileres</span></div>
+          <div class="metric"><strong>5</strong><span>segmentos con alto potencial de recompra</span></div>
+          <div class="metric"><strong>90</strong><span>dias para instalar un proceso comercial medible</span></div>
+          <div class="metric"><strong>CA</strong><span>ruta de expansion hacia compradores regionales</span></div>
+        </div>
+      </section>
+
+      <section class="canvas-shell" aria-label="Business Model Canvas Roads and Solutions">
+        <div class="canvas-meta">
+          <div class="meta-box"><b>Disenado para</b><span>Roads & Solutions S.A. - Agente de Ventas</span></div>
+          <div class="meta-box"><b>Mercado</b><span>Costa Rica + Centroamerica</span></div>
+          <div class="meta-box"><b>Fecha</b><span>28 agosto 2026</span></div>
+          <div class="meta-box"><b>Version</b><span>Demo estrategica v1</span></div>
+        </div>
+
+        <div class="canvas-grid">
+          <article class="block partners">
+            <h3>Socios clave <span>01</span></h3>
+            <ul>
+              <li><strong>Constructoras y desarrolladores</strong> que requieren subcontratos viales confiables.</li>
+              <li>Proveedores de agregados, asfalto, concreto, senales, postes y barandas certificadas.</li>
+              <li>Municipalidades, instituciones, ingenieros consultores e inspectores externos.</li>
+              <li>Talleres, transportistas, operadores certificados y servicios de mantenimiento de maquinaria.</li>
+              <li>Aliados regionales para representar servicios en Panama, Nicaragua, Honduras, El Salvador y Guatemala.</li>
+            </ul>
+          </article>
+
+          <article class="block activities">
+            <h3>Actividades clave <span>02</span></h3>
+            <ul>
+              <li>Prospeccion B2B de obras activas, licitaciones y proyectos inmobiliarios.</li>
+              <li>Visita tecnica, levantamiento de cantidades, calculo de movilizacion y alcance.</li>
+              <li>Instalacion de Flex Beam, senalizacion, demarcacion, asfaltos, concreto y drenajes.</li>
+              <li>Gestion de alquileres: disponibilidad, operador, transporte, mantenimiento y cobro.</li>
+              <li>Seguimiento posventa para convertir trabajos puntuales en mantenimiento recurrente.</li>
+            </ul>
+          </article>
+
+          <article class="block value">
+            <h3>Propuesta de valor <span>03</span></h3>
+            <ul>
+              <li><strong>Un solo proveedor vial</strong> para seguridad, superficie, drenaje, materiales y equipo.</li>
+              <li>Respuesta rapida con criterio tecnico para reducir atrasos y costos por mala coordinacion.</li>
+              <li>Especialidad visible en baranda Flex Beam, senalizacion y obras complementarias.</li>
+              <li>Soluciones llave en mano: diagnostico, cotizacion, materiales, equipo, ejecucion y entrega.</li>
+              <li>Capacidad de atender clientes privados, publicos e industriales con lenguaje comercial claro.</li>
+              <li>Modelo regional replicable con paquetes estandarizados, casos de exito y aliados locales.</li>
+            </ul>
+          </article>
+
+          <article class="block relationships">
+            <h3>Relacion con clientes <span>04</span></h3>
+            <ul>
+              <li>Asesoria consultiva: entender riesgo, urgencia, presupuesto y terreno antes de vender.</li>
+              <li>CRM sencillo con seguimiento por oportunidad, fecha de proxima accion y probabilidad de cierre.</li>
+              <li>Reportes fotograficos antes/durante/despues para justificar valor al comprador.</li>
+              <li>Contratos marco para clientes recurrentes: mantenimiento, alquileres y respuesta prioritaria.</li>
+              <li>Garantia operativa clara: alcance, exclusiones, tiempos y responsabilidades.</li>
+            </ul>
+          </article>
+
+          <article class="block segments">
+            <h3>Segmentos de clientes <span>05</span></h3>
+            <ul>
+              <li><strong>Gobierno local e instituciones</strong>: municipalidades, obras publicas, mantenimiento vial.</li>
+              <li>Constructoras y contratistas que necesitan subcontratar especialidades viales.</li>
+              <li>Desarrolladores inmobiliarios: condominios, urbanizaciones, parques industriales y accesos.</li>
+              <li>Empresas logisticas, fincas, hoteles, zonas francas y plantas industriales.</li>
+              <li>Administradores de propiedades con parqueos, caminos internos y necesidades de seguridad vial.</li>
+              <li>Compradores regionales con proyectos en Centroamerica que buscan proveedor homologado.</li>
+            </ul>
+          </article>
+
+          <article class="block resources">
+            <h3>Recursos clave <span>06</span></h3>
+            <ul>
+              <li>Equipo de campo, operadores, hincadora, vagonetas, plantas, compactadores y herramientas.</li>
+              <li>Portafolio fotografico de proyectos reales por categoria y zona.</li>
+              <li>Lista de precios base, matriz de movilizacion y plantillas de cotizacion por paquete.</li>
+              <li>Marca premium, sitio web SEO, WhatsApp comercial, CRM y material de ventas.</li>
+              <li>Experiencia tecnica acumulada y conocimiento de normativa vial y seguridad en obra.</li>
+            </ul>
+          </article>
+
+          <article class="block channels">
+            <h3>Canales <span>07</span></h3>
+            <ul>
+              <li>Sitio web optimizado para "Flex Beam Costa Rica", "senalizacion vial" y "alquiler de equipo".</li>
+              <li>Google Business Profile, llamadas, WhatsApp y formularios con respuesta comercial rapida.</li>
+              <li>LinkedIn y prospeccion directa a gerentes de proyecto, compras, ingenieros y municipalidades.</li>
+              <li>Alianzas con constructoras, oficinas de ingenieria, topografos y proveedores de materiales.</li>
+              <li>Portafolio PDF, ficha tecnica por servicio y casos de exito para enviar despues de cada visita.</li>
+            </ul>
+          </article>
+
+          <article class="block costs">
+            <h3>Estructura de costos <span>08</span></h3>
+            <ul>
+              <li>Personal operativo, supervision, seguridad ocupacional y capacitacion.</li>
+              <li>Combustible, mantenimiento, repuestos, llantas, transporte y depreciacion de equipo.</li>
+              <li>Compra de materiales: agregados, asfalto, concreto, postes, senales y barandas.</li>
+              <li>Movilizacion por zona, permisos, seguros, herramientas y consumibles.</li>
+              <li>Marketing, CRM, fotografia, pauta local, comisiones y documentacion comercial.</li>
+            </ul>
+          </article>
+
+          <article class="block revenue">
+            <h3>Fuentes de ingreso <span>09</span></h3>
+            <ul>
+              <li><strong>Contratos de obra</strong>: Flex Beam, asfaltos, concreto, drenajes, aceras, gaviones y demarcacion.</li>
+              <li><strong>Alquiler de equipo</strong>: tarifa diaria/semanal, transporte, operador y mantenimiento incluido cuando aplique.</li>
+              <li><strong>Materiales y acarreo</strong>: agregados, granular, fletes y paquetes por volumen.</li>
+              <li><strong>Mantenimiento recurrente</strong>: contratos trimestrales o semestrales para caminos, parqueos y accesos.</li>
+              <li><strong>Expansion regional</strong>: proyectos llave en mano, representacion tecnica y alianzas por pais.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="growth" aria-label="Modelo para aumentar ventas">
+        <article class="panel">
+          <p class="label">Oferta comercial</p>
+          <h2>Paquetes que facilitan comprar.</h2>
+          <ul>
+            <li><strong>Paquete Seguridad Vial:</strong> Flex Beam, senalizacion, demarcacion y cierre de obra.</li>
+            <li><strong>Paquete Acceso Productivo:</strong> conformacion, compactacion, base, material granular y acabado.</li>
+            <li><strong>Paquete Obra Civil Vial:</strong> cunetas, cabezales, aceras, cordon, cano, losas y gaviones.</li>
+            <li><strong>Paquete Equipo en Obra:</strong> alquiler con transporte, operador opcional y soporte tecnico.</li>
+          </ul>
+        </article>
+
+        <article class="panel">
+          <p class="label">Motor de ventas</p>
+          <h2>Pipeline para el agente comercial.</h2>
+          <ol>
+            <li>Detectar proyectos: licitaciones, permisos, obras activas, urbanizaciones y zonas industriales.</li>
+            <li>Contactar decisores: compras, ingenieria, gerencia de proyecto, proveeduria y administracion.</li>
+            <li>Enviar ficha del paquete mas relevante y pedir visita tecnica.</li>
+            <li>Cotizar con alcance claro, fotos de referencia, condiciones y fecha limite de decision.</li>
+            <li>Dar seguimiento 24/48/72 horas y registrar razon de perdida o siguiente accion.</li>
+          </ol>
+        </article>
+
+        <article class="panel roadmap">
+          <p class="label">Plan de 90 dias</p>
+          <h2>Ruta concreta para aumentar ventas.</h2>
+          <div class="roadmap-grid">
+            <article>
+              <span>0-15</span>
+              <h3>Ordenar oferta</h3>
+              <p>Crear fichas por paquete, lista de precios base, guion de llamada y formulario de diagnostico rapido.</p>
+            </article>
+            <article>
+              <span>16-30</span>
+              <h3>Prospeccion local</h3>
+              <p>Armar base de 150 cuentas en Costa Rica: constructoras, municipalidades, industrias y desarrolladores.</p>
+            </article>
+            <article>
+              <span>31-60</span>
+              <h3>Prueba comercial</h3>
+              <p>Ejecutar 40 contactos semanales, 10 reuniones tecnicas, 15 cotizaciones y 3 cierres objetivo.</p>
+            </article>
+            <article>
+              <span>61-90</span>
+              <h3>Escala regional</h3>
+              <p>Seleccionar 2 paises piloto, buscar aliados locales y presentar portafolio a compradores regionales.</p>
+            </article>
+          </div>
+        </article>
+
+        <article class="panel">
+          <p class="label">Centroamerica</p>
+          <h2>Estrategia de entrada regional.</h2>
+          <ul>
+            <li>Iniciar con clientes que ya operan en varios paises: constructoras, zonas francas, retail e industria.</li>
+            <li>Vender como especialista en seguridad vial y obra complementaria, no como contratista generico.</li>
+            <li>Crear aliados por pais para permisos, mano de obra, transporte, materiales y supervision local.</li>
+            <li>Usar casos de exito de Costa Rica como prueba de capacidad tecnica y cumplimiento.</li>
+          </ul>
+        </article>
+
+        <article class="panel">
+          <p class="label">Indicadores</p>
+          <h2>Tablero comercial minimo.</h2>
+          <table class="kpi-table">
+            <thead>
+              <tr>
+                <th>KPI</th>
+                <th>Meta sugerida</th>
+                <th>Uso para ventas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="KPI">Contactos nuevos</td>
+                <td data-label="Meta sugerida">40 por semana</td>
+                <td data-label="Uso para ventas">Mantener flujo constante de oportunidades.</td>
+              </tr>
+              <tr>
+                <td data-label="KPI">Visitas tecnicas</td>
+                <td data-label="Meta sugerida">8-10 por mes</td>
+                <td data-label="Uso para ventas">Convertir interes en diagnostico y propuesta.</td>
+              </tr>
+              <tr>
+                <td data-label="KPI">Cotizaciones emitidas</td>
+                <td data-label="Meta sugerida">15 por mes</td>
+                <td data-label="Uso para ventas">Medir productividad comercial real.</td>
+              </tr>
+              <tr>
+                <td data-label="KPI">Tasa de cierre</td>
+                <td data-label="Meta sugerida">25%-35%</td>
+                <td data-label="Uso para ventas">Ajustar precio, timing y propuesta de valor.</td>
+              </tr>
+              <tr>
+                <td data-label="KPI">Clientes recurrentes</td>
+                <td data-label="Meta sugerida">30% de ventas</td>
+                <td data-label="Uso para ventas">Bajar dependencia de proyectos unicos.</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </section>
+
+      <p class="download-note">
+        Documento local. Puede imprimirse en A3 horizontal o guardarse como PDF desde el navegador.
+      </p>
+    </div>
+
+    <script>
+      const pitch =
+        "Roads & Solutions S.A. resuelve necesidades viales con un solo proveedor: seguridad vial, Flex Beam, senalizacion, asfaltos, obra civil, materiales y alquiler de equipo. El crecimiento comercial viene de empaquetar servicios, prospectar cuentas B2B recurrentes, responder rapido con visitas tecnicas y abrir alianzas regionales en Centroamerica.";
+
+      document.querySelector("[data-print]").addEventListener("click", () => window.print());
+
+      document.querySelector("[data-copy]").addEventListener("click", async (event) => {
+        try {
+          await navigator.clipboard.writeText(pitch);
+          event.currentTarget.textContent = "Pitch copiado";
+          setTimeout(() => (event.currentTarget.textContent = "Copiar pitch"), 1800);
+        } catch {
+          event.currentTarget.textContent = "No se pudo copiar";
+          setTimeout(() => (event.currentTarget.textContent = "Copiar pitch"), 1800);
+        }
+      });
+
+      document.querySelector("[data-download]").addEventListener("click", () => {
+        const text = [
+          "Business Model Canvas - Roads & Solutions S.A.",
+          "",
+          "Objetivo: aumentar ventas en Costa Rica y Centroamerica mediante paquetes comerciales, prospeccion B2B, contratos recurrentes y alianzas regionales.",
+          "",
+          "Pitch:",
+          pitch,
+          "",
+          "Paquetes: Seguridad Vial, Acceso Productivo, Obra Civil Vial, Equipo en Obra.",
+          "",
+          "KPIs: contactos nuevos, visitas tecnicas, cotizaciones emitidas, tasa de cierre y clientes recurrentes."
+        ].join("\\n");
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "business-model-canvas-roadsolutions-resumen.txt";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
+</html>

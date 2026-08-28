@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="es-CR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plan de Costos - Sitio, CRM, IA, n8n y Marketing | Roads & Solutions S.A.</title>
+    <meta
+      name="description"
+      content="Plan local de costos para sitio web, formulario de cotizaciones, CRM con login, Firebase, Vercel, n8n, agente IA, LinkedIn y estudio de mercado."
+    />
+    <link rel="icon" href="assets/logo-roads-solutions.jpeg" />
+    <link rel="apple-touch-icon" href="assets/logo-roads-solutions.jpeg" />
+    <meta property="og:type" content="article" />
+    <meta property="og:locale" content="es_CR" />
+    <meta property="og:title" content="Plan de Costos - Roads & Solutions S.A." />
+    <meta
+      property="og:description"
+      content="Costos aproximados para sitio web premium, CRM, Vercel, Firebase, n8n, agente IA, LinkedIn B2B y Business Model Canvas."
+    />
+    <meta property="og:image" content="https://roadsolutionscr.wstudio3d.com/assets/hero-road-solutions.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://roadsolutionscr.wstudio3d.com/assets/hero-road-solutions.png" />
+    <style>
+      :root {
+        --black: #050505;
+        --ink: #111318;
+        --panel: #181b22;
+        --panel-2: #20242c;
+        --line: rgba(255, 255, 255, 0.14);
+        --text: #f5f6f8;
+        --muted: #b7bdc7;
+        --gold: #f4b719;
+        --gold-2: #c98512;
+        --good: #76e0a4;
+        --warn: #ffd166;
+        --max: 1320px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        background:
+          linear-gradient(90deg, rgba(244, 183, 25, 0.05) 1px, transparent 1px),
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          var(--black);
+        background-size: 64px 64px;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+        overflow-x: clip;
+      }
+
+      a {
+        color: inherit;
+        overflow-wrap: anywhere;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      .page {
+        width: min(var(--max), calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 24px 0 60px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 14px 0;
+        background: linear-gradient(180deg, rgba(5, 5, 5, 0.96), rgba(5, 5, 5, 0.76));
+        backdrop-filter: blur(16px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        min-width: 0;
+      }
+
+      .brand img {
+        width: clamp(112px, 14vw, 190px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      .brand p {
+        margin: 0 0 8px;
+        color: var(--gold);
+        font-size: 0.76rem;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: clamp(1.35rem, 3vw, 3.2rem);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .doc-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 0 0 18px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        background: rgba(5, 5, 5, 0.72);
+      }
+
+      .doc-links a {
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        padding: 8px 11px;
+        color: rgba(255, 255, 255, 0.78);
+        text-decoration: none;
+        font-size: 0.82rem;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .doc-links a:first-child {
+        color: #080808;
+        border-color: transparent;
+        background: linear-gradient(135deg, var(--gold), #ffe08a 46%, var(--gold-2));
+      }
+
+      .btn {
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 10px 14px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.06);
+        cursor: pointer;
+        font-weight: 850;
+        text-transform: uppercase;
+        white-space: normal;
+      }
+
+      .btn.primary {
+        border-color: transparent;
+        color: #080808;
+        background: linear-gradient(135deg, var(--gold), #ffe08a 46%, var(--gold-2));
+      }
+
+      .hero {
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        grid-template-columns: 1.05fr 0.75fr;
+        gap: clamp(24px, 5vw, 68px);
+        align-items: end;
+        overflow: hidden;
+        min-height: 430px;
+        margin: 12px 0 20px;
+        padding: clamp(28px, 5vw, 58px);
+        border: 1px solid var(--line);
+        background: #111318;
+      }
+
+      .topbar > *,
+      .hero > *,
+      .section-head > *,
+      .grid > *,
+      .calculator > *,
+      .sources > * {
+        min-width: 0;
+      }
+
+      .hero::before {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        content: "";
+        background:
+          linear-gradient(90deg, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.66) 52%, rgba(0, 0, 0, 0.22)),
+          url("assets/hero-road-solutions.png") center / cover;
+        filter: contrast(1.08) saturate(0.9);
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--gold);
+        font-size: 0.76rem;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      .hero h2 {
+        max-width: 920px;
+        margin-bottom: 18px;
+        font-size: clamp(2.4rem, 5vw, 5.6rem);
+        line-height: 0.92;
+        letter-spacing: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .hero p.summary {
+        max-width: 820px;
+        margin-bottom: 0;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: clamp(1rem, 1.35vw, 1.2rem);
+      }
+
+      .total-card {
+        padding: 24px;
+        border: 1px solid rgba(244, 183, 25, 0.38);
+        background: rgba(5, 5, 5, 0.7);
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+      }
+
+      .total-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.08rem;
+      }
+
+      .range {
+        display: block;
+        color: var(--gold);
+        font-size: clamp(2rem, 4vw, 3.6rem);
+        font-weight: 950;
+        line-height: 1;
+      }
+
+      .total-card p,
+      .muted {
+        color: rgba(255, 255, 255, 0.68);
+      }
+
+      .section {
+        margin-top: 20px;
+        padding: clamp(22px, 4vw, 34px);
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+          rgba(18, 19, 23, 0.9);
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 20px;
+      }
+
+      .section h2 {
+        margin: 0;
+        font-size: clamp(1.75rem, 3vw, 3.3rem);
+        line-height: 1;
+        overflow-wrap: anywhere;
+      }
+
+      .grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid.three {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .grid.two {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid.four {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .package,
+      .line-item,
+      .phase,
+      .note,
+      .source-card {
+        min-width: 0;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .package.recommended {
+        border-color: rgba(244, 183, 25, 0.55);
+        background:
+          linear-gradient(160deg, rgba(244, 183, 25, 0.12), rgba(255, 255, 255, 0.04)),
+          rgba(255, 255, 255, 0.04);
+      }
+
+      .tag {
+        display: inline-flex;
+        min-height: 28px;
+        align-items: center;
+        margin-bottom: 14px;
+        padding: 5px 10px;
+        color: #070707;
+        background: var(--gold);
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      .package h3,
+      .line-item h3,
+      .phase h3 {
+        margin: 0 0 10px;
+        color: #fff;
+        font-size: 1.16rem;
+        line-height: 1.12;
+      }
+
+      .price {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--gold);
+        font-size: 1.6rem;
+        font-weight: 950;
+      }
+
+      ul,
+      ol {
+        margin: 0;
+        padding-left: 20px;
+        color: rgba(255, 255, 255, 0.72);
+      }
+
+      li + li {
+        margin-top: 7px;
+      }
+
+      .cost-table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+      }
+
+      .cost-table th,
+      .cost-table td {
+        padding: 13px 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .cost-table th {
+        color: var(--gold);
+        font-size: 0.76rem;
+        text-transform: uppercase;
+      }
+
+      .cost-table td {
+        color: rgba(255, 255, 255, 0.76);
+      }
+
+      .cost-table strong {
+        color: #fff;
+      }
+
+      .calculator {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 14px;
+      }
+
+      .calc-box {
+        padding: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.26);
+      }
+
+      .calc-box label {
+        display: grid;
+        gap: 8px;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .calc-box input {
+        width: 100%;
+        min-height: 44px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 10px 12px;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .calc-result {
+        grid-column: 1 / -1;
+        padding: 22px;
+        border: 1px solid rgba(244, 183, 25, 0.42);
+        background: rgba(244, 183, 25, 0.08);
+      }
+
+      .calc-result strong {
+        color: var(--gold);
+        font-size: clamp(1.7rem, 3vw, 2.8rem);
+      }
+
+      .sources {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+      }
+
+      .source-card {
+        font-size: 0.86rem;
+      }
+
+      .source-card a {
+        color: var(--gold);
+        font-weight: 850;
+      }
+
+      .small {
+        font-size: 0.88rem;
+      }
+
+      @media (max-width: 1050px) {
+        .topbar,
+        .hero,
+        .section-head {
+          display: grid;
+          grid-template-columns: 1fr;
+          align-items: start;
+        }
+
+        .actions {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          width: 100%;
+        }
+
+        .btn {
+          width: 100%;
+        }
+
+        .grid.three,
+        .grid.two,
+        .grid.four,
+        .calculator,
+        .sources {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 680px) {
+        body {
+          background-size: 42px 42px;
+        }
+
+        .page {
+          width: min(100% - 24px, var(--max));
+          padding: 14px 0 42px;
+        }
+
+        .brand {
+          display: grid;
+          grid-template-columns: 104px minmax(0, 1fr);
+          align-items: start;
+        }
+
+        .brand img {
+          width: 104px;
+        }
+
+        .brand h1 {
+          font-size: 1.08rem;
+          line-height: 1.05;
+        }
+
+        .brand p {
+          font-size: 0.68rem;
+        }
+
+        .actions,
+        .doc-links,
+        .grid.three,
+        .grid.two,
+        .grid.four,
+        .calculator,
+        .sources {
+          grid-template-columns: 1fr;
+        }
+
+        .hero,
+        .section {
+          padding: 22px;
+        }
+
+        .hero h2 {
+          font-size: clamp(2rem, 11vw, 2.85rem);
+          line-height: 0.98;
+        }
+
+        .range {
+          font-size: 2.1rem;
+        }
+
+        .cost-table,
+        .cost-table tbody,
+        .cost-table tr,
+        .cost-table td,
+        .cost-table th {
+          display: block;
+        }
+
+        .cost-table thead {
+          display: none;
+        }
+
+        .cost-table tr {
+          padding: 12px 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .cost-table td {
+          border: 0;
+          padding: 5px 0;
+        }
+
+        .cost-table td::before {
+          display: block;
+          color: var(--gold);
+          font-size: 0.72rem;
+          font-weight: 950;
+          text-transform: uppercase;
+          content: attr(data-label);
+        }
+      }
+
+      @media print {
+        @page {
+          size: A4;
+          margin: 11mm;
+        }
+
+        body {
+          color: #111;
+          background: #fff;
+        }
+
+        .topbar {
+          position: static;
+        }
+
+        .actions,
+        .btn {
+          display: none;
+        }
+
+        .page {
+          width: 100%;
+          padding: 0;
+        }
+
+        .hero,
+        .section,
+        .package,
+        .line-item,
+        .phase,
+        .note,
+        .source-card,
+        .calc-box,
+        .calc-result {
+          color: #111;
+          background: #fff;
+          box-shadow: none;
+          break-inside: avoid;
+        }
+
+        .hero::before {
+          display: none;
+        }
+
+        .hero h2,
+        .section h2,
+        .package h3,
+        .line-item h3,
+        .phase h3 {
+          color: #111;
+        }
+
+        .hero p.summary,
+        .total-card p,
+        ul,
+        ol,
+        .cost-table td,
+        .muted {
+          color: #222;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <div class="brand">
+          <img src="assets/logo-roads-solutions.jpeg" alt="Roads & Solutions S.A." />
+          <div>
+            <p>Propuesta comercial local</p>
+            <h1>Plan de costos para sitio, CRM, IA, n8n y marketing B2B</h1>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="button" data-print>Imprimir / guardar PDF</button>
+          <button class="btn" type="button" data-download>Descargar CSV</button>
+          <button class="btn" type="button" data-copy>Copiar resumen</button>
+        </div>
+      </header>
+
+      <nav class="doc-links" aria-label="Documentos de propuesta">
+        <a href="index.html">Sitio principal</a>
+        <a href="presentacion-propuesta-roadsolutions.html">Presentacion formal</a>
+        <a href="business-model-canvas-roadsolutions.html">Business Model Canvas</a>
+      </nav>
+
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Roads & Solutions S.A.</p>
+          <h2>Un paquete completo para vender mas, ordenar operaciones y preparar expansion regional.</h2>
+          <p class="summary">
+            Este plan une sitio web premium, formulario de cotizaciones, CRM con login, Vercel, Firebase, marketing de
+            ventas en LinkedIn, automatizaciones n8n, agente IA para comunicacion interna, correos de seguimiento y el
+            estudio estrategico basado en Business Model Canvas.
+          </p>
+        </div>
+        <aside class="total-card">
+          <h3>Inversion recomendada de arranque</h3>
+          <span class="range">USD 12,000 - 19,000</span>
+          <p>
+            Paquete Growth recomendado para una empresa seria: sitio + CRM + login + automatizaciones comerciales e
+            internas + base de marketing B2B.
+          </p>
+          <p class="small">No incluye IVA, pauta publicitaria ni consumo variable de plataformas.</p>
+        </aside>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Tres formas de vender el proyecto</p>
+            <h2>Paquetes de implementacion</h2>
+          </div>
+          <p class="muted">Precios de servicio profesional estimados en USD.</p>
+        </div>
+        <div class="grid three">
+          <article class="package">
+            <span class="tag">MVP comercial</span>
+            <h3>Sitio + cotizaciones + CRM basico</h3>
+            <span class="price">USD 6,500 - 9,500</span>
+            <ul>
+              <li>Sitio premium responsive con SEO base.</li>
+              <li>Formulario de cotizacion conectado a Firebase.</li>
+              <li>Login administrativo y tablero simple de leads.</li>
+              <li>Deploy en Vercel y configuracion de dominio.</li>
+              <li>Ideal para validar ventas en Costa Rica.</li>
+            </ul>
+          </article>
+          <article class="package recommended">
+            <span class="tag">Recomendado</span>
+            <h3>Growth operativo y comercial</h3>
+            <span class="price">USD 12,000 - 19,000</span>
+            <ul>
+              <li>Todo el MVP comercial.</li>
+              <li>CRM con estados, tareas, archivos y seguimiento.</li>
+              <li>n8n para correos, contratos, alertas y pipeline.</li>
+              <li>Agente IA interno para consultas de obreros y personal.</li>
+              <li>Estrategia LinkedIn B2B y Business Model Canvas ejecutivo.</li>
+            </ul>
+          </article>
+          <article class="package">
+            <span class="tag">Expansion regional</span>
+            <h3>Centroamerica y automatizacion avanzada</h3>
+            <span class="price">USD 22,000 - 38,000</span>
+            <ul>
+              <li>Todo el paquete Growth.</li>
+              <li>Multi-pais, multi-equipo, permisos por rol y reportes gerenciales.</li>
+              <li>Automatizaciones n8n con auditoria y dashboards.</li>
+              <li>Campanas LinkedIn por segmento y pais piloto.</li>
+              <li>Documentacion operativa y entrenamiento comercial.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Desglose de construccion</p>
+            <h2>Costos por modulo</h2>
+          </div>
+        </div>
+        <table class="cost-table">
+          <thead>
+            <tr>
+              <th>Modulo</th>
+              <th>Alcance</th>
+              <th>Inversion unica</th>
+              <th>Notas de venta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Modulo"><strong>Estrategia y discovery</strong></td>
+              <td data-label="Alcance">Mapa de objetivos, buyer personas, flujo comercial, arquitectura de informacion y roadmap.</td>
+              <td data-label="Inversion unica">USD 900 - 1,800</td>
+              <td data-label="Notas">Se descuenta parcialmente si se contrata paquete completo.</td>
+            </tr>
+            <tr>
+              <td data-label="Modulo"><strong>Sitio web premium</strong></td>
+              <td data-label="Alcance">Diseno UI, copy, secciones comerciales, responsive, SEO tecnico, rendimiento y accesibilidad.</td>
+              <td data-label="Inversion unica">USD 2,800 - 5,500</td>
+              <td data-label="Notas">Base para convertir trafico en cotizaciones reales.</td>
+            </tr>
+            <tr>
+              <td data-label="Modulo"><strong>Formulario de cotizaciones</strong></td>
+              <td data-label="Alcance">Formulario por pasos, validaciones, tipos de servicio, materiales, archivos y confirmacion.</td>
+              <td data-label="Inversion unica">USD 1,200 - 2,400</td>
+              <td data-label="Notas">Reduce llamadas incompletas y mejora velocidad de respuesta.</td>
+            </tr>
+            <tr>
+              <td data-label="Modulo"><strong>CRM con login</strong></td>
+              <td data-label="Alcance">Firebase Auth, roles, leads, cotizaciones, tareas, estados, notas, contactos y tablero.</td>
+              <td data-label="Inversion unica">USD 3,200 - 6,800</td>
+              <td data-label="Notas">Convierte el sitio en sistema comercial, no solo brochure.</td>
+            </tr>
+            <tr>
+              <td data-label="Modulo"><strong>Vercel + Firebase</strong></td>
+              <td data-label="Alcance">Deploy, dominio, variables, reglas de seguridad, base de datos, backups logicos y monitoreo.</td>
+              <td data-label="Inversion unica">USD 1,000 - 2,200</td>
+              <td data-label="Notas">Infraestructura moderna con bajo mantenimiento inicial.</td>
+            </tr>
+            <tr>
+              <td data-label="Modulo"><strong>Automatizaciones n8n comerciales</strong></td>
+              <td data-label="Alcance">Lead a CRM, correos de seguimiento, recordatorios, contratos, vencimientos y reportes.</td>
+              <td data-label="Inversion unica">USD 2,500 - 5,800</td>
+              <td data-label="Notas">Evita que los leads se enfrien y estandariza la gestion.</td>
+            </tr>
+            <tr>
+              <td data-label="Modulo"><strong>Agente IA interno en n8n</strong></td>
+              <td data-label="Alcance">Responder preguntas de obreros/personal, consultar politicas, tareas, contactos, horarios y reportes.</td>
+              <td data-label="Inversion unica">USD 3,500 - 8,500</td>
+              <td data-label="Notas">Debe empezar con alcance controlado y aprobaciones humanas.</td>
+            </tr>
+            <tr>
+              <td data-label="Modulo"><strong>Marketing LinkedIn B2B</strong></td>
+              <td data-label="Alcance">Perfil comercial, segmentacion, mensajes, campanas, creatividades, landing y medicion.</td>
+              <td data-label="Inversion unica">USD 1,800 - 4,500</td>
+              <td data-label="Notas">Separado de la pauta publicitaria mensual.</td>
+            </tr>
+            <tr>
+              <td data-label="Modulo"><strong>Estudio de mercado + BMC</strong></td>
+              <td data-label="Alcance">Canvas, segmentos, propuesta de valor, ofertas, pipeline, KPIs y expansion Centroamerica.</td>
+              <td data-label="Inversion unica">USD 1,200 - 3,500</td>
+              <td data-label="Notas">Ya existe una base inicial; puede elevarse a informe ejecutivo.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Gasto mensual</p>
+            <h2>Operaciones, plataformas y pauta</h2>
+          </div>
+        </div>
+        <div class="grid three">
+          <article class="line-item">
+            <span class="tag">Mantenimiento</span>
+            <h3>Soporte web + CRM + seguridad</h3>
+            <span class="price">USD 650 - 1,500 / mes</span>
+            <ul>
+              <li>Actualizaciones, mejoras menores, monitoreo, backups logicos y soporte.</li>
+              <li>Incluye revision mensual de conversiones y oportunidades del CRM.</li>
+            </ul>
+          </article>
+          <article class="line-item">
+            <span class="tag">Automatizacion</span>
+            <h3>n8n + agente IA + workflows</h3>
+            <span class="price">USD 850 - 2,500 / mes</span>
+            <ul>
+              <li>Supervision de flujos, nuevas automatizaciones, ajustes de prompts y control de errores.</li>
+              <li>No incluye consumo de IA ni plan cloud si se factura directo al cliente.</li>
+            </ul>
+          </article>
+          <article class="line-item">
+            <span class="tag">Marketing</span>
+            <h3>LinkedIn ventas B2B</h3>
+            <span class="price">USD 900 - 2,800 / mes</span>
+            <ul>
+              <li>Gestion de campanas, mensajes, reportes, optimizacion y contenido comercial.</li>
+              <li>Pauta recomendada adicional: USD 1,500 - 6,000 / mes para aprendizaje real.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Costos de terceros</p>
+            <h2>Plataformas que paga el cliente</h2>
+          </div>
+          <p class="muted">Verificado el 28 agosto 2026. Puede cambiar por proveedor.</p>
+        </div>
+        <table class="cost-table">
+          <thead>
+            <tr>
+              <th>Plataforma</th>
+              <th>Referencia actual</th>
+              <th>Presupuesto recomendado</th>
+              <th>Comentario</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Plataforma"><strong>Vercel</strong></td>
+              <td data-label="Referencia">Pro desde USD 20/mes por usuario; incluye creditos/uso base.</td>
+              <td data-label="Presupuesto">USD 20 - 60 / mes inicial</td>
+              <td data-label="Comentario">Ideal para alojar el sitio y app CRM con deploy profesional.</td>
+            </tr>
+            <tr>
+              <td data-label="Plataforma"><strong>Firebase</strong></td>
+              <td data-label="Referencia">Spark sin costo; Blaze pago por uso con cuotas gratuitas segun servicio.</td>
+              <td data-label="Presupuesto">USD 0 - 150 / mes inicial</td>
+              <td data-label="Comentario">Auth, Firestore, Storage y funciones. Activar alertas de gasto.</td>
+            </tr>
+            <tr>
+              <td data-label="Plataforma"><strong>n8n Cloud</strong></td>
+              <td data-label="Referencia">Starter EUR 20/mes anual; Pro EUR 50/mes anual.</td>
+              <td data-label="Presupuesto">EUR 50 / mes recomendado</td>
+              <td data-label="Comentario">Para produccion conviene Pro por ejecuciones, roles y variables globales.</td>
+            </tr>
+            <tr>
+              <td data-label="Plataforma"><strong>LinkedIn Ads</strong></td>
+              <td data-label="Referencia">Minimo diario oficial: USD 10 por formato; lifetime nuevo desde USD 100.</td>
+              <td data-label="Presupuesto">USD 1,500 - 6,000 / mes</td>
+              <td data-label="Comentario">El minimo oficial existe, pero B2B serio necesita presupuesto para aprender.</td>
+            </tr>
+            <tr>
+              <td data-label="Plataforma"><strong>IA para agente</strong></td>
+              <td data-label="Referencia">OpenAI API cobra por tokens; GPT-5 mini: USD 0.25 input y USD 2.00 output por 1M tokens.</td>
+              <td data-label="Presupuesto">USD 50 - 300 / mes inicial</td>
+              <td data-label="Comentario">Depende del volumen de mensajes, archivos, busquedas y longitud de respuestas.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Cronograma</p>
+            <h2>Plan de implementacion por fases</h2>
+          </div>
+        </div>
+        <div class="grid four">
+          <article class="phase">
+            <span class="tag">Semana 1-2</span>
+            <h3>Estrategia y arquitectura</h3>
+            <ul>
+              <li>Definir paquetes comerciales.</li>
+              <li>Mapear flujo CRM y permisos.</li>
+              <li>Preparar contenido y SEO.</li>
+            </ul>
+          </article>
+          <article class="phase">
+            <span class="tag">Semana 3-5</span>
+            <h3>Sitio y cotizaciones</h3>
+            <ul>
+              <li>Diseno visual final.</li>
+              <li>Formulario avanzado.</li>
+              <li>Deploy en Vercel.</li>
+            </ul>
+          </article>
+          <article class="phase">
+            <span class="tag">Semana 6-8</span>
+            <h3>CRM y login</h3>
+            <ul>
+              <li>Firebase Auth y reglas.</li>
+              <li>Pipeline de leads.</li>
+              <li>Tablero administrativo.</li>
+            </ul>
+          </article>
+          <article class="phase">
+            <span class="tag">Semana 9-12</span>
+            <h3>n8n, IA y marketing</h3>
+            <ul>
+              <li>Automatizaciones comerciales.</li>
+              <li>Agente IA interno controlado.</li>
+              <li>Lanzamiento LinkedIn B2B.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Calculadora simple</p>
+            <h2>Meta de recuperacion comercial</h2>
+          </div>
+        </div>
+        <div class="calculator">
+          <div class="calc-box">
+            <label>
+              Ticket promedio por contrato (USD)
+              <input type="number" min="0" step="100" value="8500" data-ticket />
+            </label>
+          </div>
+          <div class="calc-box">
+            <label>
+              Margen bruto estimado (%)
+              <input type="number" min="1" max="100" step="1" value="28" data-margin />
+            </label>
+          </div>
+          <div class="calc-box">
+            <label>
+              Inversion inicial (USD)
+              <input type="number" min="0" step="500" value="15000" data-investment />
+            </label>
+          </div>
+          <div class="calc-result">
+            <p class="eyebrow">Punto de equilibrio comercial</p>
+            <strong data-result>Calculando...</strong>
+            <p class="muted" data-result-note></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Argumento para ventas</p>
+            <h2>Como justificar el paquete al cliente</h2>
+          </div>
+        </div>
+        <div class="grid two">
+          <article class="note">
+            <h3>Problema actual</h3>
+            <ul>
+              <li>Leads llegan por telefono, WhatsApp o formulario sin estructura.</li>
+              <li>El seguimiento depende de memoria humana y se pierden oportunidades.</li>
+              <li>El personal operativo consulta por muchos canales y consume tiempo administrativo.</li>
+              <li>LinkedIn no se usa como canal activo para llegar a decisores B2B.</li>
+            </ul>
+          </article>
+          <article class="note">
+            <h3>Resultado esperado</h3>
+            <ul>
+              <li>Mas cotizaciones completas y mas rapido.</li>
+              <li>Pipeline visible para direccion, ventas y operaciones.</li>
+              <li>Automatizaciones que reducen mensajes repetidos y atrasos.</li>
+              <li>Prospeccion B2B medible en Costa Rica y primeros paises de Centroamerica.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Fuentes oficiales consultadas</p>
+            <h2>Referencias de costos de plataformas</h2>
+          </div>
+        </div>
+        <div class="sources">
+          <article class="source-card">
+            <strong>Vercel</strong><br />
+            <a href="https://vercel.com/pricing">vercel.com/pricing</a>
+          </article>
+          <article class="source-card">
+            <strong>Firebase</strong><br />
+            <a href="https://firebase.google.com/pricing">firebase.google.com/pricing</a>
+          </article>
+          <article class="source-card">
+            <strong>n8n</strong><br />
+            <a href="https://n8n.io/pricing/">n8n.io/pricing</a>
+          </article>
+          <article class="source-card">
+            <strong>LinkedIn Ads</strong><br />
+            <a href="https://business.linkedin.com/advertise/ads/best-practices/maximize-your-budget">LinkedIn budget minimums</a>
+          </article>
+          <article class="source-card">
+            <strong>OpenAI API</strong><br />
+            <a href="https://developers.openai.com/api/docs/pricing">developers.openai.com/api/docs/pricing</a>
+          </article>
+        </div>
+        <p class="muted small">
+          Los costos de servicio profesional son estimaciones de propuesta. Los costos de terceros deben revisarse al
+          momento de contratar y no incluyen impuestos, comisiones bancarias ni variaciones de consumo.
+        </p>
+      </section>
+    </main>
+
+    <script>
+      const modules = [
+        ["Estrategia y discovery", 900, 1800],
+        ["Sitio web premium", 2800, 5500],
+        ["Formulario de cotizaciones", 1200, 2400],
+        ["CRM con login", 3200, 6800],
+        ["Vercel + Firebase", 1000, 2200],
+        ["Automatizaciones n8n comerciales", 2500, 5800],
+        ["Agente IA interno en n8n", 3500, 8500],
+        ["Marketing LinkedIn B2B", 1800, 4500],
+        ["Estudio de mercado + BMC", 1200, 3500]
+      ];
+
+      const summary =
+        "Plan recomendado: paquete Growth de USD 12,000 a 19,000 para crear sitio web premium, formulario de cotizaciones, CRM con login en Firebase, despliegue en Vercel, automatizaciones n8n, agente IA interno para personal, correos de seguimiento y marketing de ventas en LinkedIn. Mensualidad sugerida: USD 2,400 a 6,800 mas plataformas y pauta.";
+
+      const money = (value) =>
+        new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
+
+      function updateCalc() {
+        const ticket = Number(document.querySelector("[data-ticket]").value || 0);
+        const margin = Number(document.querySelector("[data-margin]").value || 0) / 100;
+        const investment = Number(document.querySelector("[data-investment]").value || 0);
+        const grossProfit = ticket * margin;
+        const contracts = grossProfit > 0 ? Math.ceil(investment / grossProfit) : 0;
+        document.querySelector("[data-result]").textContent = `${contracts} contrato${contracts === 1 ? "" : "s"} adicional${contracts === 1 ? "" : "es"}`;
+        document.querySelector("[data-result-note]").textContent =
+          `Con ticket promedio de ${money(ticket)} y margen bruto de ${Math.round(margin * 100)}%, cada contrato genera aprox. ${money(grossProfit)} de margen.`;
+      }
+
+      document.querySelectorAll("[data-ticket], [data-margin], [data-investment]").forEach((input) => {
+        input.addEventListener("input", updateCalc);
+      });
+      updateCalc();
+
+      document.querySelector("[data-print]").addEventListener("click", () => window.print());
+
+      document.querySelector("[data-copy]").addEventListener("click", async (event) => {
+        try {
+          await navigator.clipboard.writeText(summary);
+          event.currentTarget.textContent = "Resumen copiado";
+          setTimeout(() => (event.currentTarget.textContent = "Copiar resumen"), 1800);
+        } catch {
+          event.currentTarget.textContent = "No se pudo copiar";
+          setTimeout(() => (event.currentTarget.textContent = "Copiar resumen"), 1800);
+        }
+      });
+
+      document.querySelector("[data-download]").addEventListener("click", () => {
+        const header = "Modulo,Min USD,Max USD\\n";
+        const rows = modules.map(([name, min, max]) => `"${name}",${min},${max}`).join("\\n");
+        const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "plan-costos-roadsolutions.csv";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1352 @@
+<!doctype html>
+<html lang="es-CR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Presentacion Comercial - Roads & Solutions S.A.</title>
+    <meta
+      name="description"
+      content="Presentacion formal local para vender el paquete digital de sitio web premium, CRM, Firebase, Vercel, LinkedIn, n8n, agente IA y Business Model Canvas para Roads & Solutions S.A."
+    />
+    <link rel="icon" href="assets/logo-roads-solutions.jpeg" />
+    <link rel="apple-touch-icon" href="assets/logo-roads-solutions.jpeg" />
+    <meta property="og:type" content="article" />
+    <meta property="og:locale" content="es_CR" />
+    <meta property="og:title" content="Presentacion Comercial - Roads & Solutions S.A." />
+    <meta
+      property="og:description"
+      content="Presentacion formal del paquete digital de ventas, CRM, automatizacion, IA y marketing B2B para Roads & Solutions S.A."
+    />
+    <meta property="og:image" content="https://roadsolutionscr.wstudio3d.com/assets/hero-road-solutions.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://roadsolutionscr.wstudio3d.com/assets/hero-road-solutions.png" />
+    <style>
+      :root {
+        --black: #050505;
+        --coal: #101114;
+        --panel: #16191f;
+        --panel-soft: #20242c;
+        --line: rgba(255, 255, 255, 0.14);
+        --line-strong: rgba(244, 183, 25, 0.46);
+        --text: #f5f7fa;
+        --muted: #b7bec8;
+        --gold: #f4b719;
+        --gold-deep: #b9790e;
+        --steel: #aeb7c2;
+        --green: #58d68d;
+        --red: #ff786e;
+        --blue: #8fb8ff;
+        --max: 1440px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        overflow-x: clip;
+        color: var(--text);
+        background:
+          linear-gradient(90deg, rgba(244, 183, 25, 0.045) 1px, transparent 1px),
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          var(--black);
+        background-size: 72px 72px;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.45;
+      }
+
+      a {
+        color: inherit;
+        overflow-wrap: anywhere;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .deck-shell {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 286px minmax(0, 1fr);
+      }
+
+      .rail {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 18px;
+        padding: 22px;
+        border-right: 1px solid var(--line);
+        background: rgba(5, 5, 5, 0.91);
+        backdrop-filter: blur(16px);
+      }
+
+      .brand {
+        display: grid;
+        gap: 14px;
+      }
+
+      .brand img {
+        width: 190px;
+        max-width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      .brand p {
+        margin: 0;
+        color: var(--gold);
+        font-size: 0.76rem;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 1.25rem;
+        line-height: 1.04;
+      }
+
+      .nav {
+        display: grid;
+        align-content: start;
+        gap: 8px;
+        overflow: auto;
+        padding-right: 4px;
+      }
+
+      .nav a {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 10px;
+        align-items: center;
+        min-height: 42px;
+        padding: 8px;
+        border: 1px solid transparent;
+        color: rgba(255, 255, 255, 0.72);
+        text-decoration: none;
+        font-size: 0.86rem;
+        font-weight: 780;
+      }
+
+      .nav a span:first-child {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        place-items: center;
+        border: 1px solid var(--line);
+        color: var(--gold);
+        font-size: 0.72rem;
+        font-weight: 950;
+      }
+
+      .nav a.is-active,
+      .nav a:hover {
+        border-color: rgba(244, 183, 25, 0.34);
+        color: #fff;
+        background: rgba(244, 183, 25, 0.08);
+      }
+
+      .rail-actions {
+        display: grid;
+        gap: 10px;
+      }
+
+      .rail-actions a,
+      .mobile-links a {
+        text-align: center;
+        text-decoration: none;
+      }
+
+      .btn {
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 10px 12px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.06);
+        cursor: pointer;
+        font-weight: 850;
+        text-transform: uppercase;
+        white-space: normal;
+      }
+
+      .btn.primary {
+        border-color: transparent;
+        color: #070707;
+        background: linear-gradient(135deg, var(--gold), #ffe08a 48%, var(--gold-deep));
+      }
+
+      .stage {
+        min-width: 0;
+      }
+
+      .slide {
+        min-height: 100vh;
+        display: grid;
+        align-content: center;
+        gap: 26px;
+        width: min(var(--max), calc(100vw - 318px));
+        margin: 0 auto;
+        padding: 54px 34px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .slide > * {
+        min-width: 0;
+      }
+
+      .hero {
+        position: relative;
+        isolation: isolate;
+        min-height: 100vh;
+        align-content: end;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        content: "";
+        background:
+          linear-gradient(90deg, rgba(0, 0, 0, 0.96), rgba(0, 0, 0, 0.7) 48%, rgba(0, 0, 0, 0.3)),
+          url("assets/hero-road-solutions.png") center / cover;
+        filter: contrast(1.08) saturate(0.88);
+      }
+
+      .hero::after {
+        position: absolute;
+        inset: auto 0 0;
+        z-index: -1;
+        height: 42%;
+        content: "";
+        background: linear-gradient(0deg, var(--black), transparent);
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--gold);
+        font-size: 0.78rem;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h2 {
+        max-width: 1080px;
+        margin-bottom: 16px;
+        font-size: 4rem;
+        line-height: 0.96;
+        overflow-wrap: anywhere;
+      }
+
+      h3 {
+        margin-bottom: 9px;
+        color: #fff;
+        font-size: 1.25rem;
+        line-height: 1.12;
+      }
+
+      .lead {
+        max-width: 920px;
+        margin-bottom: 0;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 1.15rem;
+      }
+
+      .meta-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .metric,
+      .card,
+      .cost-card,
+      .phase,
+      .note,
+      .source {
+        min-width: 0;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025)),
+          rgba(18, 20, 25, 0.9);
+      }
+
+      .metric strong,
+      .price,
+      .highlight {
+        color: var(--gold);
+        font-weight: 950;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 2rem;
+        line-height: 1;
+      }
+
+      .metric span,
+      .muted {
+        color: rgba(255, 255, 255, 0.68);
+      }
+
+      .grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid.four {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .grid > * {
+        min-width: 0;
+      }
+
+      ul,
+      ol {
+        margin: 0;
+        padding-left: 20px;
+        color: rgba(255, 255, 255, 0.74);
+      }
+
+      li + li {
+        margin-top: 7px;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+        align-items: stretch;
+      }
+
+      .flow-step {
+        position: relative;
+        min-width: 0;
+        min-height: 136px;
+        padding: 18px;
+        border: 1px solid rgba(244, 183, 25, 0.34);
+        background: rgba(244, 183, 25, 0.08);
+      }
+
+      .flow-step b {
+        display: block;
+        margin-bottom: 9px;
+        color: var(--gold);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      .flow-step p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 0.95rem;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        margin-bottom: 14px;
+        padding: 5px 10px;
+        color: #070707;
+        background: var(--gold);
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      .cost-card.recommended {
+        border-color: var(--line-strong);
+        background:
+          linear-gradient(155deg, rgba(244, 183, 25, 0.13), rgba(255, 255, 255, 0.04)),
+          rgba(18, 20, 25, 0.9);
+      }
+
+      .price {
+        display: block;
+        margin: 8px 0 12px;
+        font-size: 1.7rem;
+        line-height: 1.05;
+      }
+
+      .comparison {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+      }
+
+      .comparison th,
+      .comparison td {
+        padding: 13px 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .comparison th {
+        color: var(--gold);
+        font-size: 0.76rem;
+        text-transform: uppercase;
+      }
+
+      .comparison td {
+        color: rgba(255, 255, 255, 0.76);
+      }
+
+      .comparison strong {
+        color: #fff;
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .phase {
+        border-top: 4px solid var(--gold);
+      }
+
+      .phase b {
+        color: var(--gold);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      .chart {
+        display: grid;
+        gap: 12px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 190px minmax(0, 1fr) 110px;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .bar-label {
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 800;
+      }
+
+      .bar {
+        height: 20px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .bar span {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--gold), var(--steel));
+      }
+
+      .bar-value {
+        color: var(--gold);
+        font-weight: 950;
+        text-align: right;
+      }
+
+      .speaker-note {
+        padding: 18px 20px;
+        border-left: 4px solid var(--gold);
+        color: rgba(255, 255, 255, 0.74);
+        background: rgba(0, 0, 0, 0.34);
+      }
+
+      .speaker-note strong {
+        color: #fff;
+      }
+
+      .progress {
+        position: fixed;
+        right: 18px;
+        bottom: 16px;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        color: rgba(255, 255, 255, 0.75);
+        background: rgba(5, 5, 5, 0.82);
+        backdrop-filter: blur(12px);
+        font-size: 0.82rem;
+        font-weight: 850;
+      }
+
+      .progress-bar {
+        width: 110px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .progress-bar span {
+        display: block;
+        width: 0%;
+        height: 100%;
+        background: var(--gold);
+      }
+
+      .mobile-top {
+        display: none;
+      }
+
+      .mobile-links {
+        display: none;
+      }
+
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 0.9fr;
+        gap: 14px;
+      }
+
+      .sources {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .source {
+        font-size: 0.86rem;
+      }
+
+      .source a {
+        color: var(--gold);
+        font-weight: 850;
+      }
+
+      @media (max-width: 1180px) {
+        .deck-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .rail {
+          display: none;
+        }
+
+        .mobile-top {
+          position: sticky;
+          top: 0;
+          z-index: 20;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 12px;
+          align-items: center;
+          padding: 12px 16px;
+          border-bottom: 1px solid var(--line);
+          background: rgba(5, 5, 5, 0.92);
+          backdrop-filter: blur(14px);
+        }
+
+        .mobile-top img {
+          width: 116px;
+          border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .mobile-links {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 10px;
+          width: min(var(--max), calc(100vw - 28px));
+          margin: 12px auto 0;
+        }
+
+        .slide {
+          width: min(var(--max), calc(100vw - 28px));
+          min-height: auto;
+          padding: 40px 0;
+        }
+
+        .hero {
+          min-height: calc(100vh - 78px);
+          padding-right: 12px;
+          padding-left: 12px;
+        }
+
+        h2 {
+          font-size: 3rem;
+        }
+
+        .meta-strip,
+        .grid.four,
+        .timeline,
+        .sources {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .flow {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .kpi-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        body {
+          background-size: 44px 44px;
+        }
+
+        .mobile-top {
+          grid-template-columns: 1fr;
+        }
+
+        .mobile-top .btn {
+          width: 100%;
+        }
+
+        .mobile-links {
+          grid-template-columns: 1fr;
+          width: min(100vw - 24px, var(--max));
+        }
+
+        .slide {
+          width: min(100vw - 24px, var(--max));
+          gap: 20px;
+          padding: 34px 0;
+        }
+
+        .hero {
+          min-height: calc(100vh - 102px);
+          align-content: end;
+        }
+
+        h2 {
+          font-size: 2.18rem;
+          line-height: 1;
+        }
+
+        .lead {
+          font-size: 1rem;
+        }
+
+        .meta-strip,
+        .grid.two,
+        .grid.three,
+        .grid.four,
+        .flow,
+        .timeline,
+        .sources {
+          grid-template-columns: 1fr;
+        }
+
+        .metric,
+        .card,
+        .cost-card,
+        .phase,
+        .note,
+        .source,
+        .speaker-note {
+          padding: 17px;
+        }
+
+        .comparison,
+        .comparison tbody,
+        .comparison tr,
+        .comparison td,
+        .comparison th {
+          display: block;
+        }
+
+        .comparison thead {
+          display: none;
+        }
+
+        .comparison tr {
+          padding: 12px 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .comparison td {
+          border: 0;
+          padding: 5px 0;
+        }
+
+        .comparison td::before {
+          display: block;
+          color: var(--gold);
+          font-size: 0.72rem;
+          font-weight: 950;
+          text-transform: uppercase;
+          content: attr(data-label);
+        }
+
+        .bar-row {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+
+        .bar-value {
+          text-align: left;
+        }
+
+        .progress {
+          left: 12px;
+          right: 12px;
+          justify-content: space-between;
+        }
+      }
+
+      @media print {
+        @page {
+          size: landscape;
+          margin: 10mm;
+        }
+
+        body {
+          color: #111;
+          background: #fff;
+        }
+
+        .rail,
+        .mobile-top,
+        .mobile-links,
+        .progress {
+          display: none;
+        }
+
+        .deck-shell {
+          display: block;
+        }
+
+        .slide {
+          width: 100%;
+          min-height: auto;
+          padding: 18mm 0;
+          page-break-after: always;
+          break-after: page;
+          border: 0;
+        }
+
+        .hero::before,
+        .hero::after {
+          display: none;
+        }
+
+        .slide,
+        .metric,
+        .card,
+        .cost-card,
+        .phase,
+        .note,
+        .source,
+        .speaker-note {
+          color: #111;
+          background: #fff;
+          box-shadow: none;
+        }
+
+        h2,
+        h3,
+        .comparison strong,
+        .speaker-note strong {
+          color: #111;
+        }
+
+        .lead,
+        .muted,
+        ul,
+        ol,
+        .comparison td {
+          color: #222;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="deck-shell">
+      <aside class="rail" aria-label="Navegacion de la presentacion">
+        <div class="brand">
+          <img src="assets/logo-roads-solutions.jpeg" alt="Roads & Solutions S.A." />
+          <div>
+            <p>Propuesta formal</p>
+            <h1>Paquete digital de ventas, CRM, automatizacion e IA</h1>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="#slide-01"><span>01</span><span>Portada</span></a>
+          <a href="#slide-02"><span>02</span><span>Objetivo</span></a>
+          <a href="#slide-03"><span>03</span><span>Oportunidad</span></a>
+          <a href="#slide-04"><span>04</span><span>Solucion</span></a>
+          <a href="#slide-05"><span>05</span><span>Sitio y SEO</span></a>
+          <a href="#slide-06"><span>06</span><span>CRM y cotizaciones</span></a>
+          <a href="#slide-07"><span>07</span><span>n8n comercial</span></a>
+          <a href="#slide-08"><span>08</span><span>Agente IA</span></a>
+          <a href="#slide-09"><span>09</span><span>LinkedIn B2B</span></a>
+          <a href="#slide-10"><span>10</span><span>BMC y mercado</span></a>
+          <a href="#slide-11"><span>11</span><span>Paquetes</span></a>
+          <a href="#slide-12"><span>12</span><span>Costos mensuales</span></a>
+          <a href="#slide-13"><span>13</span><span>Cronograma</span></a>
+          <a href="#slide-14"><span>14</span><span>ROI y cierre</span></a>
+        </nav>
+        <div class="rail-actions">
+          <button class="btn primary" type="button" data-print>Imprimir / PDF</button>
+          <button class="btn" type="button" data-copy>Copiar resumen</button>
+          <a class="btn" href="index.html">Sitio principal</a>
+          <a class="btn" href="plan-costos-paquete-roadsolutions.html">Plan de costos</a>
+          <a class="btn" href="business-model-canvas-roadsolutions.html">Business Model Canvas</a>
+        </div>
+      </aside>
+
+      <main class="stage">
+        <div class="mobile-top">
+          <img src="assets/logo-roads-solutions.jpeg" alt="Roads & Solutions S.A." />
+          <button class="btn primary" type="button" data-print-mobile>Imprimir / PDF</button>
+        </div>
+        <nav class="mobile-links" aria-label="Documentos de propuesta">
+          <a class="btn" href="index.html">Sitio principal</a>
+          <a class="btn" href="plan-costos-paquete-roadsolutions.html">Plan de costos</a>
+          <a class="btn" href="business-model-canvas-roadsolutions.html">Business Model Canvas</a>
+        </nav>
+
+        <section class="slide hero" id="slide-01">
+          <p class="eyebrow">Roads & Solutions S.A. | Propuesta ejecutiva</p>
+          <h2>Un sistema comercial para vender mas y operar con mas control.</h2>
+          <p class="lead">
+            Presentacion formal para implementar sitio web premium, formulario de cotizaciones, CRM con login, Vercel,
+            Firebase, LinkedIn B2B, automatizaciones en n8n, agente IA interno y estudio de mercado con Business Model
+            Canvas.
+          </p>
+          <div class="meta-strip">
+            <article class="metric"><strong>12</strong><span>semanas de implementacion recomendada</span></article>
+            <article class="metric"><strong>USD 12k-19k</strong><span>paquete Growth recomendado</span></article>
+            <article class="metric"><strong>CRM + IA</strong><span>ventas, operaciones y seguimiento</span></article>
+            <article class="metric"><strong>CR + CA</strong><span>Costa Rica y expansion Centroamerica</span></article>
+          </div>
+          <aside class="speaker-note">
+            <strong>Guion del Agente de Ventas:</strong> abrir con una idea simple: esto no es solo una pagina web, es
+            una maquina comercial y operativa para captar, ordenar y cerrar oportunidades.
+          </aside>
+        </section>
+
+        <section class="slide" id="slide-02">
+          <p class="eyebrow">Objetivo de negocio</p>
+          <h2>Convertir presencia digital en ventas medibles, seguimiento y eficiencia interna.</h2>
+          <div class="grid three">
+            <article class="card">
+              <span class="tag">Ventas</span>
+              <h3>Mas cotizaciones calificadas</h3>
+              <p class="muted">Capturar datos completos, segmentar por tipo de servicio y responder con mayor rapidez.</p>
+            </article>
+            <article class="card">
+              <span class="tag">Operacion</span>
+              <h3>Menos dependencia de memoria humana</h3>
+              <p class="muted">Cada lead, contrato, tarea y seguimiento queda visible en un CRM con estados claros.</p>
+            </article>
+            <article class="card">
+              <span class="tag">Escala</span>
+              <h3>Preparacion para Centroamerica</h3>
+              <p class="muted">Crear procesos replicables para cuentas B2B, municipalidades, constructoras e industrias.</p>
+            </article>
+          </div>
+          <aside class="speaker-note">
+            <strong>Mensaje clave:</strong> la inversion se justifica porque conecta marketing, ventas y operaciones en
+            un mismo proceso medible.
+          </aside>
+        </section>
+
+        <section class="slide" id="slide-03">
+          <p class="eyebrow">Diagnostico comercial</p>
+          <h2>La oportunidad esta en cerrar fugas de seguimiento y abrir un canal B2B serio.</h2>
+          <div class="grid two">
+            <article class="note">
+              <h3>Situacion comun en empresas de infraestructura</h3>
+              <ul>
+                <li>Leads llegan por telefono, WhatsApp, referencias y formularios poco estructurados.</li>
+                <li>Las cotizaciones tardan porque falta informacion tecnica desde el primer contacto.</li>
+                <li>Los seguimientos dependen de personas especificas y se pierden oportunidades.</li>
+                <li>La comunicacion interna de personal operativo consume tiempo administrativo.</li>
+              </ul>
+            </article>
+            <article class="note">
+              <h3>Respuesta que proponemos</h3>
+              <ul>
+                <li>Sitio premium con confianza visual y SEO para busquedas de alto valor.</li>
+                <li>Formulario de cotizacion por pasos conectado al CRM.</li>
+                <li>Automatizaciones para contratos, correos, tareas, recordatorios y reportes.</li>
+                <li>Agente IA interno para responder preguntas repetidas con control humano.</li>
+              </ul>
+            </article>
+          </div>
+          <aside class="speaker-note">
+            <strong>Como decirlo:</strong> hoy el crecimiento no depende solo de tener mas contactos, depende de no
+            perder los contactos buenos y atenderlos con disciplina.
+          </aside>
+        </section>
+
+        <section class="slide" id="slide-04">
+          <p class="eyebrow">Arquitectura propuesta</p>
+          <h2>Un ecosistema conectado desde el primer clic hasta el seguimiento post-contrato.</h2>
+          <div class="flow">
+            <article class="flow-step">
+              <b>01 Sitio premium</b>
+              <p>Marca, servicios, SEO, credibilidad, casos y llamados a cotizar.</p>
+            </article>
+            <article class="flow-step">
+              <b>02 Cotizacion</b>
+              <p>Formulario por pasos, archivos, ubicacion, tipo de obra y urgencia.</p>
+            </article>
+            <article class="flow-step">
+              <b>03 CRM</b>
+              <p>Lead, cliente, estado, responsable, notas, tareas y historial.</p>
+            </article>
+            <article class="flow-step">
+              <b>04 n8n + IA</b>
+              <p>Correos, alertas, agente interno, seguimiento y reportes automaticos.</p>
+            </article>
+            <article class="flow-step">
+              <b>05 LinkedIn B2B</b>
+              <p>Prospeccion de decisores, campanas, mensajes y conversiones medibles.</p>
+            </article>
+          </div>
+          <aside class="speaker-note">
+            <strong>Mensaje clave:</strong> cada modulo alimenta al siguiente. No son piezas sueltas, es un proceso de
+            venta y ejecucion.
+          </aside>
+        </section>
+
+        <section class="slide" id="slide-05">
+          <p class="eyebrow">Servicio 1</p>
+          <h2>Sitio web premium con SEO tecnico y enfoque de conversion.</h2>
+          <div class="grid three">
+            <article class="card">
+              <h3>Diseno y confianza</h3>
+              <ul>
+                <li>Identidad visual basada en el logo de Roads & Solutions S.A.</li>
+                <li>Hero con imagen vial, tono serio y presencia corporativa.</li>
+                <li>Responsive profesional para movil, tablet y escritorio.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Contenido comercial</h3>
+              <ul>
+                <li>Servicios: seguridad vial, obra civil, Flex Beam, senalizacion y alquileres.</li>
+                <li>Textos orientados a clientes B2B y compradores institucionales.</li>
+                <li>CTA para cotizar, llamar, escribir y agendar visita tecnica.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>SEO para Google</h3>
+              <ul>
+                <li>Metadata, sitemap, robots, estructura semantica y performance.</li>
+                <li>Keywords por servicio y ubicacion.</li>
+                <li>Preparado para analitica, conversiones y Search Console.</li>
+              </ul>
+            </article>
+          </div>
+          <p class="lead"><span class="highlight">Inversion estimada:</span> USD 2,800 - 5,500.</p>
+        </section>
+
+        <section class="slide" id="slide-06">
+          <p class="eyebrow">Servicio 2</p>
+          <h2>Formulario de cotizaciones y CRM con login dentro del sitio.</h2>
+          <div class="grid two">
+            <article class="card">
+              <h3>Formulario inteligente de cotizacion</h3>
+              <ul>
+                <li>Datos del cliente, empresa, ubicacion, fecha y urgencia.</li>
+                <li>Tipo de servicio, cantidades, fotografias, planos o archivos.</li>
+                <li>Confirmacion automatica al cliente y alerta al equipo comercial.</li>
+                <li>Registro directo en Firebase para no perder solicitudes.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>CRM con acceso privado</h3>
+              <ul>
+                <li>Login con Firebase Auth y permisos por rol.</li>
+                <li>Pipeline: nuevo, contactado, visita, cotizado, negociacion, ganado, perdido.</li>
+                <li>Notas, tareas, archivos, responsables y fecha de proximo seguimiento.</li>
+                <li>Dashboard para ventas, gerencia y operaciones.</li>
+              </ul>
+            </article>
+          </div>
+          <p class="lead"><span class="highlight">Inversion estimada:</span> formulario USD 1,200 - 2,400; CRM USD 3,200 - 6,800.</p>
+        </section>
+
+        <section class="slide" id="slide-07">
+          <p class="eyebrow">Servicio 3</p>
+          <h2>Automatizaciones n8n para clientes, contratos y seguimiento del CRM.</h2>
+          <div class="grid three">
+            <article class="card">
+              <h3>Lead a CRM</h3>
+              <p class="muted">Cada solicitud del sitio entra al CRM, crea tarea, asigna responsable y dispara alerta interna.</p>
+            </article>
+            <article class="card">
+              <h3>Correos y contratos</h3>
+              <p class="muted">Secuencias para confirmacion, solicitud de informacion, envio de propuesta y recordatorios.</p>
+            </article>
+            <article class="card">
+              <h3>Reportes ejecutivos</h3>
+              <p class="muted">Resumen semanal de leads, cotizaciones abiertas, oportunidades calientes y tareas vencidas.</p>
+            </article>
+          </div>
+          <div class="chart" aria-label="Impacto esperado de automatizaciones">
+            <div class="bar-row"><span class="bar-label">Velocidad de respuesta</span><div class="bar"><span style="width: 86%"></span></div><span class="bar-value">Alta</span></div>
+            <div class="bar-row"><span class="bar-label">Control de seguimiento</span><div class="bar"><span style="width: 92%"></span></div><span class="bar-value">Muy alto</span></div>
+            <div class="bar-row"><span class="bar-label">Reduccion de tareas repetidas</span><div class="bar"><span style="width: 78%"></span></div><span class="bar-value">Alta</span></div>
+          </div>
+          <p class="lead"><span class="highlight">Inversion estimada:</span> USD 2,500 - 5,800.</p>
+        </section>
+
+        <section class="slide" id="slide-08">
+          <p class="eyebrow">Servicio 4</p>
+          <h2>Agente IA en n8n para comunicacion interna del personal operativo.</h2>
+          <div class="grid two">
+            <article class="card">
+              <h3>Casos de uso internos</h3>
+              <ul>
+                <li>Responder preguntas sobre horarios, contactos, procedimientos y tareas.</li>
+                <li>Consultar informacion aprobada por la empresa sin molestar a administracion.</li>
+                <li>Escalar a humano cuando el tema sea sensible, contractual o fuera de alcance.</li>
+                <li>Registrar dudas frecuentes para mejorar comunicacion interna.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Control y seguridad</h3>
+              <ul>
+                <li>Base de conocimiento curada por la empresa.</li>
+                <li>Respuestas limitadas a politicas y datos autorizados.</li>
+                <li>Logs de conversacion y revision de calidad.</li>
+                <li>Reglas para no prometer pagos, cambios laborales o decisiones gerenciales.</li>
+              </ul>
+            </article>
+          </div>
+          <p class="lead"><span class="highlight">Inversion estimada:</span> USD 3,500 - 8,500; operacion mensual USD 850 - 2,500 mas consumo de IA.</p>
+        </section>
+
+        <section class="slide" id="slide-09">
+          <p class="eyebrow">Servicio 5</p>
+          <h2>Marketing Digital de ventas en LinkedIn para decisores B2B.</h2>
+          <div class="grid three">
+            <article class="card">
+              <h3>Perfil y oferta</h3>
+              <ul>
+                <li>Optimizar perfil corporativo y materiales para credibilidad.</li>
+                <li>Paquetes por servicio: seguridad vial, obra civil, alquileres y mantenimiento.</li>
+                <li>Mensajes para gerentes, ingenieros, compras y desarrolladores.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Prospeccion</h3>
+              <ul>
+                <li>Lista de cuentas objetivo en Costa Rica.</li>
+                <li>Segmentacion por industria, cargo, ubicacion y tamano de empresa.</li>
+                <li>Campanas de reconocimiento, trafico y generacion de leads.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Medicion</h3>
+              <ul>
+                <li>Leads, costo por lead, reuniones, cotizaciones y cierre.</li>
+                <li>Landing pages por segmento.</li>
+                <li>Reporte mensual con ajustes de presupuesto y mensajes.</li>
+              </ul>
+            </article>
+          </div>
+          <p class="lead"><span class="highlight">Inversion estimada:</span> setup USD 1,800 - 4,500; gestion USD 900 - 2,800 / mes; pauta sugerida USD 1,500 - 6,000 / mes.</p>
+        </section>
+
+        <section class="slide" id="slide-10">
+          <p class="eyebrow">Estudio de mercado y BMC</p>
+          <h2>El Business Model Canvas convierte servicios tecnicos en ofertas comprables.</h2>
+          <div class="grid three">
+            <article class="card">
+              <h3>Segmentos</h3>
+              <ul>
+                <li>Constructoras e ingenierias.</li>
+                <li>Municipalidades e instituciones.</li>
+                <li>Industrias, condominios, desarrolladores y compradores regionales.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Propuesta de valor</h3>
+              <ul>
+                <li>Un solo proveedor para seguridad vial, obra civil, materiales y alquiler.</li>
+                <li>Respuesta rapida, capacidad tecnica y cumplimiento.</li>
+                <li>Ofertas por paquetes para facilitar la decision de compra.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>KPIs comerciales</h3>
+              <ul>
+                <li>Contactos nuevos y visitas tecnicas.</li>
+                <li>Cotizaciones emitidas y tasa de cierre.</li>
+                <li>Clientes recurrentes y contratos por segmento.</li>
+              </ul>
+            </article>
+          </div>
+          <p class="lead"><span class="highlight">Inversion estimada:</span> USD 1,200 - 3,500, partiendo del canvas inicial ya creado.</p>
+        </section>
+
+        <section class="slide" id="slide-11">
+          <p class="eyebrow">Paquetes de implementacion</p>
+          <h2>Tres niveles para vender segun ambicion, velocidad y presupuesto.</h2>
+          <div class="grid three">
+            <article class="cost-card">
+              <span class="tag">MVP comercial</span>
+              <h3>Sitio + cotizaciones + CRM basico</h3>
+              <span class="price">USD 6,500 - 9,500</span>
+              <ul>
+                <li>Sitio premium responsive con SEO base.</li>
+                <li>Formulario conectado a Firebase.</li>
+                <li>Login administrativo y tablero simple.</li>
+                <li>Deploy en Vercel y configuracion de dominio.</li>
+              </ul>
+            </article>
+            <article class="cost-card recommended">
+              <span class="tag">Recomendado</span>
+              <h3>Growth operativo y comercial</h3>
+              <span class="price">USD 12,000 - 19,000</span>
+              <ul>
+                <li>Todo el MVP comercial.</li>
+                <li>CRM con estados, tareas, archivos y seguimiento.</li>
+                <li>n8n para correos, contratos, alertas y pipeline.</li>
+                <li>Agente IA interno y estrategia LinkedIn B2B.</li>
+              </ul>
+            </article>
+            <article class="cost-card">
+              <span class="tag">Expansion regional</span>
+              <h3>Centroamerica y automatizacion avanzada</h3>
+              <span class="price">USD 22,000 - 38,000</span>
+              <ul>
+                <li>Todo el paquete Growth.</li>
+                <li>Multi-pais, multi-equipo y permisos por rol.</li>
+                <li>Automatizaciones con auditoria y dashboards.</li>
+                <li>Campanas LinkedIn por segmento y pais piloto.</li>
+              </ul>
+            </article>
+          </div>
+          <aside class="speaker-note">
+            <strong>Recomendacion comercial:</strong> vender Growth como punto ideal. MVP es entrada; Expansion es vision
+            de crecimiento.
+          </aside>
+        </section>
+
+        <section class="slide" id="slide-12">
+          <p class="eyebrow">Costos mensuales y plataformas</p>
+          <h2>Separar inversion profesional, operacion mensual y costos de terceros evita confusion.</h2>
+          <table class="comparison">
+            <thead>
+              <tr>
+                <th>Rubro</th>
+                <th>Rango recomendado</th>
+                <th>Detalle</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Rubro"><strong>Soporte web + CRM + seguridad</strong></td>
+                <td data-label="Rango">USD 650 - 1,500 / mes</td>
+                <td data-label="Detalle">Actualizaciones, monitoreo, mejoras menores, backups logicos y revision de conversiones.</td>
+              </tr>
+              <tr>
+                <td data-label="Rubro"><strong>n8n + agente IA + workflows</strong></td>
+                <td data-label="Rango">USD 850 - 2,500 / mes</td>
+                <td data-label="Detalle">Supervision, nuevas automatizaciones, ajustes de prompts y control de errores.</td>
+              </tr>
+              <tr>
+                <td data-label="Rubro"><strong>LinkedIn ventas B2B</strong></td>
+                <td data-label="Rango">USD 900 - 2,800 / mes</td>
+                <td data-label="Detalle">Gestion de campanas, mensajes, reportes, optimizacion y contenido comercial.</td>
+              </tr>
+              <tr>
+                <td data-label="Rubro"><strong>Pauta LinkedIn Ads</strong></td>
+                <td data-label="Rango">USD 1,500 - 6,000 / mes</td>
+                <td data-label="Detalle">Presupuesto sugerido para aprendizaje B2B real; minimo oficial desde USD 10 diarios por formato.</td>
+              </tr>
+              <tr>
+                <td data-label="Rubro"><strong>Plataformas</strong></td>
+                <td data-label="Rango">USD 70 - 510+ / mes</td>
+                <td data-label="Detalle">Vercel Pro, Firebase segun consumo, n8n Cloud Pro e IA por tokens.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="slide" id="slide-13">
+          <p class="eyebrow">Cronograma ejecutivo</p>
+          <h2>Implementacion recomendada en cuatro fases de 12 semanas.</h2>
+          <div class="timeline">
+            <article class="phase">
+              <b>Semana 1-2</b>
+              <h3>Estrategia y arquitectura</h3>
+              <ul>
+                <li>Objetivos, buyer personas y servicios prioritarios.</li>
+                <li>Mapa de CRM, permisos y datos.</li>
+                <li>SEO, contenido y estructura comercial.</li>
+              </ul>
+            </article>
+            <article class="phase">
+              <b>Semana 3-5</b>
+              <h3>Sitio y cotizaciones</h3>
+              <ul>
+                <li>Diseno UI final.</li>
+                <li>Formulario avanzado.</li>
+                <li>Deploy en Vercel y pruebas.</li>
+              </ul>
+            </article>
+            <article class="phase">
+              <b>Semana 6-8</b>
+              <h3>CRM y login</h3>
+              <ul>
+                <li>Firebase Auth y seguridad.</li>
+                <li>Pipeline, tareas y tablero.</li>
+                <li>Entrenamiento inicial.</li>
+              </ul>
+            </article>
+            <article class="phase">
+              <b>Semana 9-12</b>
+              <h3>n8n, IA y LinkedIn</h3>
+              <ul>
+                <li>Automatizaciones comerciales.</li>
+                <li>Agente IA interno controlado.</li>
+                <li>Lanzamiento de prospeccion B2B.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="slide" id="slide-14">
+          <p class="eyebrow">ROI y cierre</p>
+          <h2>La propuesta se paga con pocos contratos adicionales bien gestionados.</h2>
+          <div class="kpi-grid">
+            <article class="card">
+              <h3>Ejemplo de recuperacion</h3>
+              <p class="lead">
+                Con un ticket promedio de <span class="highlight">USD 8,500</span>, margen bruto estimado de
+                <span class="highlight">28%</span> e inversion Growth promedio de <span class="highlight">USD 15,000</span>,
+                el punto de equilibrio aproximado es de <span class="highlight">7 contratos adicionales</span>.
+              </p>
+              <p class="muted">La cifra real depende del margen, ticket por servicio, presupuesto publicitario y disciplina de seguimiento.</p>
+            </article>
+            <article class="card">
+              <h3>Decision recomendada</h3>
+              <ul>
+                <li>Aprobar paquete Growth como base.</li>
+                <li>Definir responsable interno de ventas y responsable operativo.</li>
+                <li>Preparar accesos a dominio, Vercel, Firebase, LinkedIn y correos.</li>
+                <li>Iniciar con 150 cuentas objetivo en Costa Rica.</li>
+              </ul>
+            </article>
+          </div>
+          <div class="sources">
+            <article class="source"><strong>Vercel</strong><br /><a href="https://vercel.com/pricing">vercel.com/pricing</a></article>
+            <article class="source"><strong>Firebase</strong><br /><a href="https://firebase.google.com/pricing">firebase.google.com/pricing</a></article>
+            <article class="source"><strong>n8n</strong><br /><a href="https://n8n.io/pricing/">n8n.io/pricing</a></article>
+            <article class="source"><strong>LinkedIn Ads</strong><br /><a href="https://business.linkedin.com/advertise/ads/best-practices/maximize-your-budget">LinkedIn budget guide</a></article>
+            <article class="source"><strong>OpenAI API</strong><br /><a href="https://developers.openai.com/api/docs/pricing">OpenAI pricing</a></article>
+          </div>
+          <aside class="speaker-note">
+            <strong>Cierre sugerido:</strong> proponemos comenzar con Growth porque crea el sistema completo: captacion,
+            CRM, automatizacion, IA y prospeccion. Ese es el paquete que puede mover ventas, no solo mejorar apariencia.
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <div class="progress" aria-live="polite">
+      <span data-slide-label>Slide 1 / 14</span>
+      <div class="progress-bar"><span data-progress></span></div>
+    </div>
+
+    <script>
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const navLinks = Array.from(document.querySelectorAll(".nav a"));
+      const slideLabel = document.querySelector("[data-slide-label]");
+      const progress = document.querySelector("[data-progress]");
+      const summary =
+        "Propuesta formal Roads & Solutions S.A.: paquete Growth recomendado USD 12,000 - 19,000 para sitio web premium, formulario de cotizaciones, CRM con login en Firebase, despliegue en Vercel, automatizaciones n8n, agente IA interno, seguimiento comercial por correo, LinkedIn B2B y Business Model Canvas. Mensualidad sugerida de servicios: USD 2,400 - 6,800 mas plataformas y pauta.";
+
+      function activeIndex() {
+        const midpoint = window.innerHeight * 0.42;
+        let index = 0;
+        slides.forEach((slide, slideIndex) => {
+          const rect = slide.getBoundingClientRect();
+          if (rect.top <= midpoint) index = slideIndex;
+        });
+        return index;
+      }
+
+      function updateProgress() {
+        const index = activeIndex();
+        slideLabel.textContent = `Slide ${index + 1} / ${slides.length}`;
+        progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+        navLinks.forEach((link, linkIndex) => {
+          link.classList.toggle("is-active", linkIndex === index);
+        });
+      }
+
+      function goTo(offset) {
+        const index = Math.min(Math.max(activeIndex() + offset, 0), slides.length - 1);
+        slides[index].scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      document.querySelectorAll("[data-print], [data-print-mobile]").forEach((button) => {
+        button.addEventListener("click", () => window.print());
+      });
+
+      document.querySelector("[data-copy]").addEventListener("click", async (event) => {
+        try {
+          await navigator.clipboard.writeText(summary);
+          event.currentTarget.textContent = "Resumen copiado";
+          setTimeout(() => {
+            event.currentTarget.textContent = "Copiar resumen";
+          }, 1800);
+        } catch (error) {
+          event.currentTarget.textContent = "Copiado no disponible";
+        }
+      });
+
+      window.addEventListener("scroll", updateProgress, { passive: true });
+      window.addEventListener("resize", updateProgress);
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowDown" || event.key === "PageDown" || event.key === " ") {
+          event.preventDefault();
+          goTo(1);
+        }
+        if (event.key === "ArrowUp" || event.key === "PageUp") {
+          event.preventDefault();
+          goTo(-1);
+        }
+        if (event.key === "Home") {
+          event.preventDefault();
+          slides[0].scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        if (event.key === "End") {
+          event.preventDefault();
+          slides[slides.length - 1].scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+
+      updateProgress();
+    </script>
+  </body>
+</html>
