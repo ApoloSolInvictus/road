@@ -12,7 +12,7 @@ const requiredFiles = [
   "vercel.json",
   "assets/logo-roads-solutions.jpeg",
   "assets/hero-road-solutions.png",
-  "assets/warning-chat-button.png"
+  "assets/warning-chat-button-transparent.png"
 ];
 
 const checks = [];
