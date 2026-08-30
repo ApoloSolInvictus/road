@@ -78,6 +78,7 @@ const flexHistory = [];
 let flexRecognition = null;
 let flexListening = false;
 let flexTranscript = "";
+let flexSpeechQueue = [];
 
 const setFlexStatus = (message) => {
   if (flexStatus) {
@@ -95,10 +96,41 @@ const addFlexMessage = (role, text) => {
   flexMessages?.scrollTo({ top: flexMessages.scrollHeight, behavior: "smooth" });
 };
 
-const speakFlex = (text) => {
-  if (!speech) return;
-  speech.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
+const splitSpeechText = (text) => {
+  const cleanText = text.replace(/\s+/g, " ").trim();
+  const sentences = cleanText.match(/[^.!?;:]+[.!?;:]?/g) || [cleanText];
+  const chunks = [];
+  let current = "";
+
+  for (const sentence of sentences) {
+    const next = `${current} ${sentence}`.trim();
+    if (next.length <= 220) {
+      current = next;
+      continue;
+    }
+    if (current) {
+      chunks.push(current);
+    }
+    if (sentence.length <= 220) {
+      current = sentence.trim();
+      continue;
+    }
+    for (let index = 0; index < sentence.length; index += 200) {
+      chunks.push(sentence.slice(index, index + 200).trim());
+    }
+    current = "";
+  }
+
+  if (current) {
+    chunks.push(current);
+  }
+
+  return chunks.filter(Boolean);
+};
+
+const speakNextFlexChunk = () => {
+  if (!speech || !flexSpeechQueue.length) return;
+  const utterance = new SpeechSynthesisUtterance(flexSpeechQueue.shift());
   utterance.lang = "es-CR";
   const spanishVoice = speech
     .getVoices()
@@ -109,7 +141,15 @@ const speakFlex = (text) => {
   utterance.rate = 0.94;
   utterance.pitch = 0.92;
   utterance.volume = 1;
+  utterance.addEventListener("end", speakNextFlexChunk);
   speech.speak(utterance);
+};
+
+const speakFlex = (text) => {
+  if (!speech) return;
+  speech.cancel();
+  flexSpeechQueue = splitSpeechText(text);
+  speakNextFlexChunk();
 };
 
 const localFlexReply = (message) => {

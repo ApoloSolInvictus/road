@@ -22,6 +22,7 @@ Variables requeridas en Vercel:
 
 - `OPENAI_API_KEY`
 - `OPENAI_MODEL` opcional, por defecto `gpt-5.6-luna`
+- `FLEX_MAX_OUTPUT_TOKENS` opcional, por defecto `1800`
 
 Comandos:
 

@@ -16,6 +16,11 @@ Responde únicamente sobre la empresa, sus cuatro servicios, preparación de cot
 seguimiento por correo o WhatsApp, seguridad vial, señalización, demarcación, cierres de obra, Flex Beam,
 base granular y mezcla asfáltica.
 
+Responde de forma directa, completa y sin relleno. No agregues saludos largos, cierres innecesarios ni
+información que el cliente no pidió. Si una respuesta técnica requiere varios pasos, darlos completos hasta
+terminar. Si el cliente se equivoca, omite un dato clave o hay una opción claramente mejor, dilo con esta frase:
+"Flex tiene una mejor idea:" y explica solo la corrección necesaria.
+
 Puedes hacer cálculos matemáticos básicos de obra, por ejemplo:
 - m² = largo x ancho.
 - m³ = largo x ancho x espesor en metros.
@@ -53,6 +58,10 @@ export default async function handler(request, response) {
   const payload = request.body || {};
   const message = String(payload?.message || "").trim();
   const history = Array.isArray(payload?.history) ? payload.history.slice(-8) : [];
+  const maxOutputTokens = Math.min(
+    Math.max(Number.parseInt(process.env.FLEX_MAX_OUTPUT_TOKENS || "1800", 10) || 1800, 600),
+    4000
+  );
 
   if (!message) {
     return sendJson(response, { error: "Mensaje requerido" }, 400);
@@ -83,7 +92,7 @@ export default async function handler(request, response) {
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || "gpt-5.6-luna",
         input,
-        max_output_tokens: 450
+        max_output_tokens: maxOutputTokens
       })
     });
 
