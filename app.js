@@ -75,6 +75,9 @@ const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogni
 const speech = "speechSynthesis" in window ? window.speechSynthesis : null;
 
 const flexHistory = [];
+let flexRecognition = null;
+let flexListening = false;
+let flexTranscript = "";
 
 const setFlexStatus = (message) => {
   if (flexStatus) {
@@ -97,7 +100,15 @@ const speakFlex = (text) => {
   speech.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "es-CR";
+  const spanishVoice = speech
+    .getVoices()
+    .find((voice) => voice.lang?.toLowerCase().startsWith("es"));
+  if (spanishVoice) {
+    utterance.voice = spanishVoice;
+  }
   utterance.rate = 0.94;
+  utterance.pitch = 0.92;
+  utterance.volume = 1;
   speech.speak(utterance);
 };
 
@@ -159,8 +170,7 @@ flexClose?.addEventListener("click", () => {
   flexToggle?.setAttribute("aria-expanded", "false");
 });
 
-flexForm?.addEventListener("submit", async (event) => {
-  event.preventDefault();
+const submitFlexMessage = async () => {
   const message = flexInput.value.trim();
   if (!message) return;
   flexInput.value = "";
@@ -169,24 +179,100 @@ flexForm?.addEventListener("submit", async (event) => {
   flexHistory.push({ role: "assistant", content: reply });
   addFlexMessage("bot", reply);
   speakFlex(reply);
+};
+
+flexForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  await submitFlexMessage();
 });
 
-flexMic?.addEventListener("click", () => {
+const stopFlexListening = () => {
+  if (!flexRecognition || !flexListening) return;
+  flexRecognition.stop();
+};
+
+const createFlexRecognition = () => {
   if (!SpeechRecognition) {
-    setFlexStatus("El navegador no permite dictado por micrófono en esta sesión.");
-    return;
+    return null;
   }
 
   const recognition = new SpeechRecognition();
   recognition.lang = "es-CR";
-  recognition.interimResults = false;
+  recognition.interimResults = true;
   recognition.maxAlternatives = 1;
-  setFlexStatus("Escuchando...");
-  recognition.start();
+  recognition.continuous = false;
+
+  recognition.addEventListener("start", () => {
+    flexListening = true;
+    flexTranscript = "";
+    flexMic?.classList.add("is-listening");
+    flexMic?.setAttribute("aria-label", "Detener micrófono de Flex");
+    setFlexStatus("Escuchando... hable con Flex.");
+  });
+
   recognition.addEventListener("result", (event) => {
-    flexInput.value = event.results[0][0].transcript;
+    let interim = "";
+    let finalText = "";
+
+    for (let index = event.resultIndex; index < event.results.length; index += 1) {
+      const transcript = event.results[index][0].transcript;
+      if (event.results[index].isFinal) {
+        finalText += transcript;
+      } else {
+        interim += transcript;
+      }
+    }
+
+    flexTranscript = `${flexTranscript} ${finalText}`.trim();
+    flexInput.value = `${flexTranscript} ${interim}`.trim();
     flexInput.focus();
   });
-  recognition.addEventListener("end", () => setFlexStatus("Mensaje dictado. Revise y envíe a Flex."));
-  recognition.addEventListener("error", () => setFlexStatus("No pude activar el micrófono. Puede escribir la consulta."));
+
+  recognition.addEventListener("end", async () => {
+    flexListening = false;
+    flexMic?.classList.remove("is-listening");
+    flexMic?.setAttribute("aria-label", "Hablar con Flex");
+
+    if (flexInput.value.trim()) {
+      setFlexStatus("Mensaje escuchado. Flex está respondiendo...");
+      await submitFlexMessage();
+      return;
+    }
+
+    setFlexStatus("No detecté voz. Toque el micrófono e intente de nuevo.");
+  });
+
+  recognition.addEventListener("error", (event) => {
+    flexListening = false;
+    flexMic?.classList.remove("is-listening");
+    flexMic?.setAttribute("aria-label", "Hablar con Flex");
+    const messages = {
+      "not-allowed": "Active el permiso de micrófono del navegador para hablar con Flex.",
+      "no-speech": "No detecté voz. Toque el micrófono e intente de nuevo.",
+      "audio-capture": "No encontré un micrófono disponible en este dispositivo."
+    };
+    setFlexStatus(messages[event.error] || "No pude activar el micrófono. También puede escribir la consulta.");
+  });
+
+  return recognition;
+};
+
+flexMic?.addEventListener("click", () => {
+  if (!SpeechRecognition) {
+    setFlexStatus("El navegador no permite dictado por micrófono en esta sesión. Use Chrome o Edge con HTTPS.");
+    return;
+  }
+
+  if (flexListening) {
+    stopFlexListening();
+    return;
+  }
+
+  speech?.cancel();
+  flexRecognition = createFlexRecognition();
+  try {
+    flexRecognition?.start();
+  } catch {
+    setFlexStatus("El micrófono ya estaba iniciando. Espere un momento e intente de nuevo.");
+  }
 });
