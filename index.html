@@ -74,6 +74,7 @@
         <a href="#servicios">Servicios</a>
         <a href="#empresa">Empresa</a>
         <a href="#documentos">Propuesta</a>
+        <a href="crm.html">Login CRM</a>
         <a href="#cotizar">Cotizar</a>
       </nav>
     </header>
@@ -360,7 +361,7 @@
           </fieldset>
 
           <fieldset>
-            <legend>Servicios de interes</legend>
+            <legend>Servicios de interés</legend>
             <div class="check-grid dense">
               <label><input type="checkbox" value="Suministro e instalación de baranda tipo Flex Beam" /> Baranda tipo Flex Beam</label>
               <label><input type="checkbox" value="Señalización vertical y horizontal" /> Señalización vertical y horizontal</label>
@@ -423,6 +424,47 @@
         CRM, WhatsApp o panel administrativo.
       </p>
     </dialog>
+
+    <aside class="flex-chat" data-flex-chat aria-live="polite">
+      <button class="flex-launcher" type="button" aria-label="Abrir chat con Flex" aria-expanded="false" data-flex-toggle>
+        <img src="assets/warning-chat-button.png" alt="" />
+        <span>Flex</span>
+      </button>
+
+      <section class="flex-panel" aria-label="Chat Bot Flex" hidden data-flex-panel>
+        <header class="flex-header">
+          <div>
+            <p>Agente IA</p>
+            <h2>Flex</h2>
+          </div>
+          <button type="button" aria-label="Cerrar chat" data-flex-close>&times;</button>
+        </header>
+        <div class="flex-status" data-flex-status>Experto en seguridad vial, cotizaciones y obra carretera.</div>
+        <div class="flex-messages" data-flex-messages>
+          <article class="flex-message bot">
+            <strong>Flex</strong>
+            <p>
+              Buen día. Soy Flex, asistente de clientes de Roads &amp; Solutions S.A. Puedo orientarle sobre Flex Beam,
+              señalización, demarcación, cierres de obra, base y mezcla asfáltica. También puedo ayudarle a estimar
+              cantidades en metros lineales, m², m³ o materiales preliminares para preparar una cotización.
+            </p>
+          </article>
+        </div>
+        <form class="flex-form" data-flex-form>
+          <textarea
+            name="message"
+            rows="3"
+            placeholder="Pregunte sobre servicios, cantidades o cotización..."
+            aria-label="Mensaje para Flex"
+            required
+          ></textarea>
+          <div class="flex-actions">
+            <button class="flex-icon" type="button" aria-label="Hablar con Flex" title="Hablar con Flex" data-flex-mic>🎙</button>
+            <button class="button primary" type="submit">Enviar</button>
+          </div>
+        </form>
+      </section>
+    </aside>
 
     <script src="app.js" defer></script>
   </body>

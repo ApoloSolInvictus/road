@@ -1,10 +1,33 @@
-# Roads & Solutions S.A. premium website demo
+# Roads & Solutions S.A. premium website
 
-Demo premium para una empresa costarricense de seguridad vial, construccion vial, baranda Flex Beam, senalizacion, asfaltos, materiales y alquiler de equipo especializado.
+Sitio premium para Roads & Solutions S.A., empresa costarricense enfocada en seguridad vial y construcción vial.
 
-## Publicacion sugerida
+## Servicios principales
 
-Este repositorio esta listo para GitHub Pages desde la rama `main`.
+- Suministro e instalación de baranda tipo Flex Beam.
+- Señalización vertical y horizontal.
+- Demarcación vial y apoyo en cierres de obra.
+- Colocación de base y mezcla asfáltica.
+
+## Vercel
+
+El proyecto está listo para desplegarse en Vercel con:
+
+- Sitio estático principal.
+- Endpoint serverless `api/flex.js` para el agente IA.
+- Página `crm.html` como base visual del login CRM.
+- `vercel.json` con URLs limpias y headers iniciales.
+
+Variables requeridas en Vercel:
+
+- `OPENAI_API_KEY`
+- `OPENAI_MODEL` opcional, por defecto `gpt-5.6-luna`
+
+Comandos:
+
+- `npm install`
+- `npm run build`
+- `npm run dev`
 
 ## SEO preparado
 
@@ -13,8 +36,8 @@ Este repositorio esta listo para GitHub Pages desde la rama `main`.
 - Schema.org `LocalBusiness`.
 - `robots.txt`.
 - `sitemap.xml`.
-- Copy comercial orientado a busquedas de seguridad vial, Flex Beam y construccion en Costa Rica.
+- Copy comercial orientado a búsquedas de seguridad vial, Flex Beam, señalización, demarcación y mezcla asfáltica en Costa Rica.
 
-## Nota
+## CRM y automatización
 
-El formulario es una demo sin envio automatico. La version final puede conectarse a correo, WhatsApp, CRM o panel administrativo.
+El formulario y el chat de Flex quedan preparados para conectarse a CRM, correo, WhatsApp, Firebase y automatizaciones n8n en la siguiente fase.

@@ -1,0 +1,16 @@
+{
+  "name": "road-solutions-vercel-crm",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sitio premium de Roads & Solutions S.A. con chat bot Flex, base CRM y despliegue en Vercel.",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "node scripts/audit-site.mjs",
+    "audit": "node scripts/audit-site.mjs",
+    "start": "vercel dev"
+  },
+  "devDependencies": {
+    "vercel": "^48.0.0"
+  }
+}
