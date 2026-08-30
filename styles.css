@@ -1118,6 +1118,11 @@ textarea:focus {
   color: #f3a4a4;
 }
 
+/* Keep the authentication gate and private CRM views aligned with auth state. */
+.crm-app-body [hidden] {
+  display: none !important;
+}
+
 .crm-app-header {
   position: sticky;
   top: 0;
