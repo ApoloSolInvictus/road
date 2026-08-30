@@ -31,14 +31,236 @@ if (dateInput && !dateInput.value) {
   dateInput.value = today;
 }
 
+const CRM_STORAGE_KEY = "roadsSolutionsCrm.v1";
+const CRM_STAGE_RECEIVED = "Solicitud recibida";
+
+const loadCrmState = () => {
+  try {
+    return {
+      contacts: [],
+      opportunities: [],
+      tasks: [],
+      notifications: [],
+      selectedId: null,
+      ...JSON.parse(localStorage.getItem(CRM_STORAGE_KEY))
+    };
+  } catch {
+    return {
+      contacts: [],
+      opportunities: [],
+      tasks: [],
+      notifications: [],
+      selectedId: null
+    };
+  }
+};
+
+const saveCrmState = (state) => {
+  localStorage.setItem(CRM_STORAGE_KEY, JSON.stringify(state));
+};
+
+const createCrmId = (prefix) => `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+
+const crmStamp = () =>
+  new Date().toLocaleString("es-CR", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+
+const normalizeCrmText = (text) =>
+  String(text || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+const inferCrmService = (selected, detail) => {
+  const text = normalizeCrmText(`${selected.join(" ")} ${detail}`);
+  if (text.includes("flex") || text.includes("baranda")) return "Flex Beam";
+  if (text.includes("asfalt") || text.includes("base") || text.includes("mezcla")) return "Base granular y mezcla asfáltica";
+  if (text.includes("demarc") || text.includes("cierre")) return "Demarcación vial y cierres de obra";
+  return "Señalización vertical y horizontal";
+};
+
+const classifyCrmUrgency = (selected, detail) => {
+  const text = normalizeCrmText(`${selected.join(" ")} ${detail}`);
+  if (/urgente|inmediato|hoy|manana|mañana|riesgo|cierre|desvio|desvío/.test(text)) return "Alta";
+  return "Media";
+};
+
+const firstNumber = (value) => {
+  const match = String(value || "").replace(",", ".").match(/\d+(\.\d+)?/);
+  return match ? Number.parseFloat(match[0]) : 0;
+};
+
+const buildCrmTasks = (opportunity) => {
+  const taskBase = {
+    opportunityId: opportunity.id,
+    owner: opportunity.owner,
+    done: false,
+    createdAt: crmStamp()
+  };
+  const tasks = [];
+  const service = opportunity.service;
+
+  if (!opportunity.quantities.metrosLineales && service !== "Señalización vertical y horizontal") {
+    tasks.push({
+      ...taskBase,
+      id: createCrmId("task"),
+      title: "Solicitar información adicional",
+      detail: "Confirmar medidas técnicas completas para cotizar.",
+      due: opportunity.project.urgency === "Alta" ? today : ""
+    });
+  }
+
+  if (service === "Flex Beam") {
+    tasks.push({
+      ...taskBase,
+      id: createCrmId("task"),
+      title: "Solicitar datos Flex Beam",
+      detail: "Longitud, terminales, ubicación exacta y fotografías.",
+      due: ""
+    });
+  }
+
+  if (service === "Base granular y mezcla asfáltica") {
+    tasks.push({
+      ...taskBase,
+      id: createCrmId("task"),
+      title: "Solicitar datos de asfalto",
+      detail: "Largo, ancho, espesor, superficie y base existente.",
+      due: ""
+    });
+  }
+
+  if (service === "Demarcación vial y cierres de obra") {
+    tasks.push({
+      ...taskBase,
+      id: createCrmId("task"),
+      title: "Solicitar esquema vial",
+      detail: "Tipo de línea, metros lineales, símbolos, flechas, planos, horarios y duración.",
+      due: ""
+    });
+  }
+
+  tasks.push({
+    ...taskBase,
+    id: createCrmId("task"),
+    title: "Revisión técnica",
+    detail: "Revisar solicitud recibida desde el formulario web.",
+    due: today
+  });
+
+  return tasks;
+};
+
+const savePublicQuoteToCrm = (data, selected) => {
+  const state = loadCrmState();
+  const detail = String(data.get("detalle") || "");
+  const service = inferCrmService(selected, detail);
+  const urgency = classifyCrmUrgency(selected, detail);
+  const roughMeasure = firstNumber(`${data.get("area") || ""} ${data.get("cantidad") || ""}`);
+  const now = crmStamp();
+  const clientName = String(data.get("nombre") || "Cliente web").trim();
+  const phone = String(data.get("telefono") || "").trim();
+  const email = String(data.get("correo") || "").trim();
+
+  const contact =
+    state.contacts.find((item) => item.email === email || item.phone === phone) ||
+    {
+      id: createCrmId("contact"),
+      name: clientName,
+      contactPerson: clientName,
+      phone,
+      email,
+      preference: "Ambos",
+      createdAt: now,
+      lastContactAt: now
+    };
+
+  contact.name = clientName;
+  contact.phone = phone;
+  contact.email = email;
+  contact.lastContactAt = now;
+
+  if (!state.contacts.some((item) => item.id === contact.id)) {
+    state.contacts.push(contact);
+  }
+
+  const opportunity = {
+    id: createCrmId("opp"),
+    contactId: contact.id,
+    client: {
+      name: clientName,
+      contactPerson: clientName,
+      phone,
+      email,
+      preference: "Ambos"
+    },
+    project: {
+      location: String(data.get("direccion") || "").trim(),
+      province: String(data.get("provincia") || ""),
+      canton: "",
+      coordinates: "",
+      description: [detail, String(data.get("superficie") || ""), String(data.get("cantidad") || "")]
+        .filter(Boolean)
+        .join(" | "),
+      urgency,
+      startDate: ""
+    },
+    service,
+    quantities: {
+      largo: 0,
+      ancho: 0,
+      espesorCm: 0,
+      metrosLineales: service.includes("Flex") || service.includes("Demarcación") ? roughMeasure : 0,
+      senales: service.includes("Señalización") ? roughMeasure : 0,
+      m2: service.includes("asfáltica") ? roughMeasure : 0,
+      m3: 0
+    },
+    files: [],
+    stage: CRM_STAGE_RECEIVED,
+    owner: "Ventas",
+    source: "Formulario web",
+    entryDate: String(data.get("fecha") || today),
+    lastContactDate: today,
+    nextAction: "Revisión técnica y respuesta al cliente.",
+    estimatedAmount: 0,
+    probability: urgency === "Alta" ? 45 : 35,
+    lossReason: "",
+    createdAt: now,
+    updatedAt: now,
+    history: [
+      {
+        stage: CRM_STAGE_RECEIVED,
+        date: now,
+        owner: "Ventas",
+        nextAction: "Revisión técnica y respuesta al cliente."
+      }
+    ]
+  };
+
+  state.opportunities.unshift(opportunity);
+  state.tasks.unshift(...buildCrmTasks(opportunity));
+  state.notifications.unshift({
+    id: createCrmId("note"),
+    opportunityId: opportunity.id,
+    title: "Solicitud web recibida",
+    detail: `${clientName} solicitó ${service}. Responder por correo o WhatsApp lo más pronto posible.`,
+    createdAt: now
+  });
+  state.selectedId = opportunity.id;
+  saveCrmState(state);
+};
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const data = new FormData(form);
   const selected = Array.from(form.querySelectorAll('input[type="checkbox"]:checked')).map((item) => item.value);
+  savePublicQuoteToCrm(data, selected);
   const summary = [
     `Solicitud preparada para ${data.get("nombre") || "cliente"}.`,
     selected.length ? `Intereses: ${selected.join(", ")}.` : "Sin servicios marcados aun.",
-    "Demo lista para conectar a correo, CRM o WhatsApp."
+    "Guardada en el CRM local para revisión, tareas y seguimiento."
   ].join(" ");
 
   note.textContent = summary;

@@ -41,4 +41,13 @@ Comandos:
 
 ## CRM y automatización
 
-El formulario y el chat de Flex quedan preparados para conectarse a CRM, correo, WhatsApp, Firebase y automatizaciones n8n en la siguiente fase.
+El formulario público crea solicitudes en el CRM local y el panel privado usa Firebase Authentication para el acceso por correo y contraseña.
+
+### Configurar Firebase Auth
+
+1. En Firebase Console, crea una aplicación web y habilita el proveedor `Email/Password` en Authentication.
+2. Copia `firebase-config.example.js` como `firebase-config.js`.
+3. Completa en `firebase-config.js` los valores públicos de configuración de la aplicación web.
+4. Crea los usuarios autorizados desde Firebase Console.
+
+`firebase-config.js` está ignorado por Git. La configuración web de Firebase no contiene secretos de servidor, pero las reglas de Firestore, Storage y cualquier dato comercial deben protegerse en sus propios servicios antes de migrar el CRM desde `localStorage`.
