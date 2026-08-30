@@ -51,3 +51,16 @@ El formulario público crea solicitudes en el CRM local y el panel privado usa F
 4. Crea los usuarios autorizados desde Firebase Console.
 
 `firebase-config.js` está ignorado por Git. La configuración web de Firebase no contiene secretos de servidor, pero las reglas de Firestore, Storage y cualquier dato comercial deben protegerse en sus propios servicios antes de migrar el CRM desde `localStorage`.
+
+### Configurar Firebase desde Vercel
+
+En el proyecto de Vercel, abre `Settings → Environment Variables` y agrega estas variables para `Production` (y `Preview` si también deseas probar previews):
+
+- `FIREBASE_API_KEY`
+- `FIREBASE_AUTH_DOMAIN`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_STORAGE_BUCKET`
+- `FIREBASE_MESSAGING_SENDER_ID`
+- `FIREBASE_APP_ID`
+
+Después de guardar las variables, ejecuta un nuevo redeploy desde `Deployments → Redeploy`. El build genera `firebase-config.js` automáticamente; no necesitas subir ese archivo ni usar la terminal.

@@ -6,7 +6,7 @@
   "description": "Sitio premium de Roads & Solutions S.A. con chat bot Flex, base CRM y despliegue en Vercel.",
   "scripts": {
     "dev": "npx vercel dev",
-    "build": "node scripts/audit-site.mjs",
+    "build": "node scripts/build-firebase-config.mjs && node scripts/audit-site.mjs",
     "audit": "node scripts/audit-site.mjs",
     "start": "npx vercel dev"
   }
