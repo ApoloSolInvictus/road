@@ -10,7 +10,6 @@ const requiredFiles = [
   "app.js",
   "api/flex.js",
   "vercel.json",
-  "CNAME",
   "assets/logo-roads-solutions.jpeg",
   "assets/hero-road-solutions.png",
   "assets/warning-chat-button.png"
