@@ -902,6 +902,110 @@ textarea:focus {
   font-size: 0.82rem;
 }
 
+.flex-tools {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.flex-tool {
+  min-height: 38px;
+  padding: 7px 8px;
+  border: 1px solid rgba(242, 183, 25, 0.34);
+  color: var(--gold);
+  background: rgba(242, 183, 25, 0.08);
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 850;
+  line-height: 1.15;
+  cursor: pointer;
+}
+
+.flex-tool:hover,
+.flex-tool:focus-visible {
+  color: #050505;
+  background: var(--gold);
+}
+
+.flex-crm-form {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.flex-crm-form[hidden] {
+  display: none;
+}
+
+.flex-crm-form-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #fff;
+  font-size: 0.88rem;
+}
+
+.flex-form-close {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+
+.flex-crm-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.flex-crm-grid label {
+  display: grid;
+  gap: 5px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.flex-crm-grid label.full {
+  grid-column: 1 / -1;
+}
+
+.flex-crm-grid input,
+.flex-crm-grid select,
+.flex-crm-grid textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  font: inherit;
+  font-size: 0.78rem;
+}
+
+.flex-crm-grid textarea {
+  resize: vertical;
+}
+
+.flex-form-help,
+.flex-form-note {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.flex-form-note:empty {
+  display: none;
+}
+
 .flex-messages {
   display: grid;
   gap: 12px;
@@ -2104,6 +2208,15 @@ textarea:focus {
 
   .flex-messages {
     max-height: 42vh;
+  }
+
+  .flex-tools,
+  .flex-crm-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flex-crm-grid label.full {
+    grid-column: auto;
   }
 
   .crm-shell {

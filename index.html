@@ -371,7 +371,7 @@
           </fieldset>
 
           <button class="button primary full-button" type="submit">Preparar solicitud</button>
-          <p class="form-note" data-form-note>Demo sin envío automático. En producción se conecta a correo, CRM o WhatsApp.</p>
+          <p class="form-note" data-form-note>La solicitud queda guardada en el CRM local para revisión técnica y seguimiento comercial.</p>
         </form>
       </section>
 
@@ -420,8 +420,7 @@
       <button type="button" aria-label="Cerrar" data-dialog-close>&times;</button>
       <h2>Solicitud preparada</h2>
       <p>
-        Esta demo ya organiza la información para envío comercial. En la versión final conectamos el formulario a correo,
-        CRM, WhatsApp o panel administrativo.
+        La solicitud quedó organizada para revisión técnica, tareas automáticas y seguimiento comercial en el CRM.
       </p>
     </dialog>
 
@@ -440,6 +439,82 @@
           <button type="button" aria-label="Cerrar chat" data-flex-close>&times;</button>
         </header>
         <div class="flex-status" data-flex-status>Experto en seguridad vial, cotizaciones y obra carretera.</div>
+        <div class="flex-tools" aria-label="Acciones del CRM con Flex">
+          <button class="flex-tool" type="button" data-flex-quote-toggle>Solicitar cotización</button>
+          <button class="flex-tool" type="button" data-flex-status-toggle>Consultar solicitud</button>
+          <button class="flex-tool" type="button" data-flex-complaint-toggle>Reportar incidencia</button>
+        </div>
+        <form class="flex-crm-form" data-flex-quote-form hidden>
+          <div class="flex-crm-form-head">
+            <strong>Nueva solicitud de cotización</strong>
+            <button class="flex-form-close" type="button" aria-label="Cerrar formulario" data-flex-quote-close>&times;</button>
+          </div>
+          <div class="flex-crm-grid">
+            <label>Nombre o empresa<input type="text" name="nombre" required /></label>
+            <label>Correo<input type="email" name="correo" required /></label>
+            <label>Teléfono<input type="tel" name="telefono" required /></label>
+            <label>Ubicación<input type="text" name="ubicacion" required /></label>
+            <label>Servicio
+              <select name="servicio" required>
+                <option value="">Seleccione</option>
+                <option>Flex Beam</option>
+                <option>Señalización vertical y horizontal</option>
+                <option>Demarcación vial y cierres de obra</option>
+                <option>Base granular y mezcla asfáltica</option>
+              </select>
+            </label>
+            <label>Urgencia
+              <select name="urgencia" required>
+                <option>Media</option>
+                <option>Alta</option>
+                <option>Baja</option>
+              </select>
+            </label>
+            <label>Largo (m)<input type="number" name="largo" min="0" step="0.01" /></label>
+            <label>Ancho (m)<input type="number" name="ancho" min="0" step="0.01" /></label>
+            <label>Espesor (cm)<input type="number" name="espesor" min="0" step="0.01" /></label>
+            <label>Metros lineales<input type="number" name="metrosLineales" min="0" step="0.01" /></label>
+            <label>Cantidad de señales<input type="number" name="senales" min="0" step="1" /></label>
+            <label class="full">Detalle del proyecto<textarea name="detalle" rows="3" required></textarea></label>
+          </div>
+          <button class="button primary full-button" type="submit">Guardar solicitud en CRM</button>
+          <p class="flex-form-note" data-flex-quote-note></p>
+        </form>
+        <form class="flex-crm-form" data-flex-status-form hidden>
+          <div class="flex-crm-form-head">
+            <strong>Consultar avance</strong>
+            <button class="flex-form-close" type="button" aria-label="Cerrar formulario" data-flex-status-close>&times;</button>
+          </div>
+          <p class="flex-form-help">Ingrese el correo o teléfono usado en la solicitud.</p>
+          <div class="flex-crm-grid">
+            <label>Correo<input type="email" name="correo" /></label>
+            <label>Teléfono<input type="tel" name="telefono" /></label>
+          </div>
+          <button class="button primary full-button" type="submit">Buscar solicitud</button>
+          <p class="flex-form-note" data-flex-status-note></p>
+        </form>
+        <form class="flex-crm-form" data-flex-complaint-form hidden>
+          <div class="flex-crm-form-head">
+            <strong>Reportar incidencia</strong>
+            <button class="flex-form-close" type="button" aria-label="Cerrar formulario" data-flex-complaint-close>&times;</button>
+          </div>
+          <div class="flex-crm-grid">
+            <label>Nombre o empresa<input type="text" name="nombre" required /></label>
+            <label>Correo<input type="email" name="correo" /></label>
+            <label>Teléfono<input type="tel" name="telefono" /></label>
+            <label>Proyecto o ubicación<input type="text" name="proyecto" required /></label>
+            <label>Urgencia
+              <select name="urgencia">
+                <option>Media</option>
+                <option>Alta</option>
+                <option>Baja</option>
+              </select>
+            </label>
+            <label class="full">Detalle de la incidencia<textarea name="descripcion" rows="4" required></textarea></label>
+          </div>
+          <button class="button primary full-button" type="submit">Registrar incidencia</button>
+          <p class="flex-form-note" data-flex-complaint-note></p>
+        </form>
         <div class="flex-messages" data-flex-messages>
           <article class="flex-message bot">
             <strong>Flex</strong>

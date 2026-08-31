@@ -41,6 +41,8 @@ const loadCrmState = () => {
       opportunities: [],
       tasks: [],
       notifications: [],
+      activities: [],
+      quotes: [],
       selectedId: null,
       ...JSON.parse(localStorage.getItem(CRM_STORAGE_KEY))
     };
@@ -50,6 +52,8 @@ const loadCrmState = () => {
       opportunities: [],
       tasks: [],
       notifications: [],
+      activities: [],
+      quotes: [],
       selectedId: null
     };
   }
@@ -252,6 +256,227 @@ const savePublicQuoteToCrm = (data, selected) => {
   saveCrmState(state);
 };
 
+const flexField = (data, ...names) =>
+  names.map((name) => String(data.get(name) || "").trim()).find(Boolean) || "";
+
+const flexNumber = (value) => {
+  const parsed = Number.parseFloat(String(value || "").replace(",", "."));
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+};
+
+const normalizeCrmPhone = (value) => String(value || "").replace(/\D/g, "");
+
+const getOrCreateCrmContact = (state, data, now) => {
+  const name = flexField(data, "nombre") || "Cliente Flex";
+  const phone = flexField(data, "telefono");
+  const email = flexField(data, "correo");
+  const normalizedEmail = normalizeCrmText(email);
+  const normalizedPhone = normalizeCrmPhone(phone);
+  const contact = state.contacts.find((item) =>
+    (normalizedEmail && normalizeCrmText(item.email) === normalizedEmail) ||
+    (normalizedPhone && normalizeCrmPhone(item.phone) === normalizedPhone)
+  ) || {
+    id: createCrmId("contact"),
+    name,
+    contactPerson: name,
+    phone,
+    email,
+    preference: "Ambos",
+    createdAt: now,
+    lastContactAt: now
+  };
+
+  contact.name = name;
+  contact.contactPerson = name;
+  contact.phone = phone || contact.phone || "";
+  contact.email = email || contact.email || "";
+  contact.preference = "Ambos";
+  contact.lastContactAt = now;
+
+  if (!state.contacts.some((item) => item.id === contact.id)) {
+    state.contacts.push(contact);
+  }
+
+  return contact;
+};
+
+const buildFlexOpportunity = (data, contact, now, { source = "Chat Flex", serviceOverride = "" } = {}) => {
+  const detail = flexField(data, "detalle", "descripcion") || "Solicitud iniciada desde Flex.";
+  const service = serviceOverride || flexField(data, "servicio") || inferCrmService([], detail);
+  const urgency = flexField(data, "urgencia") || classifyCrmUrgency([], detail);
+  const largo = flexNumber(flexField(data, "largo"));
+  const ancho = flexNumber(flexField(data, "ancho"));
+  const espesorCm = flexNumber(flexField(data, "espesor", "espesorCm"));
+  const m2 = largo && ancho ? Number((largo * ancho).toFixed(2)) : 0;
+  const m3 = m2 && espesorCm ? Number((m2 * (espesorCm / 100)).toFixed(2)) : 0;
+  const metrosLineales = flexNumber(flexField(data, "metrosLineales", "longitud"));
+  const senales = flexNumber(flexField(data, "senales", "cantidad"));
+  const location = flexField(data, "ubicacion", "proyecto", "direccion");
+  const nextAction = "Revisión técnica y respuesta al cliente.";
+
+  return {
+    id: createCrmId("opp"),
+    contactId: contact.id,
+    client: {
+      name: contact.name,
+      contactPerson: contact.contactPerson,
+      phone: contact.phone,
+      email: contact.email,
+      preference: contact.preference
+    },
+    project: {
+      location,
+      province: flexField(data, "provincia"),
+      canton: flexField(data, "canton"),
+      coordinates: flexField(data, "coordenadas"),
+      description: detail,
+      urgency,
+      startDate: flexField(data, "fechaInicio", "fecha")
+    },
+    service,
+    quantities: {
+      largo,
+      ancho,
+      espesorCm,
+      metrosLineales,
+      senales,
+      m2,
+      m3
+    },
+    files: [],
+    stage: CRM_STAGE_RECEIVED,
+    owner: "Ventas",
+    source,
+    entryDate: flexField(data, "fecha") || today,
+    lastContactDate: today,
+    nextAction,
+    estimatedAmount: 0,
+    probability: urgency === "Alta" ? 45 : urgency === "Baja" ? 25 : 35,
+    lossReason: "",
+    createdAt: now,
+    updatedAt: now,
+    history: [{ stage: CRM_STAGE_RECEIVED, date: now, owner: "Ventas", nextAction }]
+  };
+};
+
+const createFlexQuoteInCrm = (data) => {
+  const state = loadCrmState();
+  const now = crmStamp();
+  const contact = getOrCreateCrmContact(state, data, now);
+  const opportunity = buildFlexOpportunity(data, contact, now);
+
+  state.opportunities.unshift(opportunity);
+  state.tasks.unshift(...buildCrmTasks(opportunity));
+  state.notifications.unshift({
+    id: createCrmId("note"),
+    opportunityId: opportunity.id,
+    title: "Solicitud recibida por Flex",
+    detail: `${contact.name} creó una solicitud de ${opportunity.service} desde el asistente Flex.`,
+    createdAt: now
+  });
+  state.activities.unshift({
+    id: createCrmId("activity"),
+    opportunityId: opportunity.id,
+    type: "Solicitud recibida",
+    channel: "Chat Flex",
+    message: "El cliente completó el formulario de cotización asistido por Flex.",
+    owner: opportunity.owner,
+    createdAt: now
+  });
+  state.selectedId = opportunity.id;
+  saveCrmState(state);
+  return opportunity;
+};
+
+const findCrmOpportunitiesByCustomer = (data) => {
+  const state = loadCrmState();
+  const email = normalizeCrmText(flexField(data, "correo"));
+  const phone = normalizeCrmPhone(flexField(data, "telefono"));
+  if (!email && !phone) return [];
+
+  return state.opportunities.filter((opportunity) => {
+    const opportunityEmail = normalizeCrmText(opportunity.client?.email);
+    const opportunityPhone = normalizeCrmPhone(opportunity.client?.phone);
+    return (email && opportunityEmail === email) || (phone && opportunityPhone === phone);
+  });
+};
+
+const getSafeFlexCrmContext = (data) => {
+  const opportunities = findCrmOpportunitiesByCustomer(data).slice(0, 5);
+  return {
+    opportunities: opportunities.map((opportunity) => ({
+      service: opportunity.service,
+      location: opportunity.project?.location || "Ubicación pendiente",
+      stage: opportunity.stage,
+      urgency: opportunity.project?.urgency || "Media",
+      entryDate: opportunity.entryDate || "",
+      lastContactDate: opportunity.lastContactDate || "",
+      nextAction: opportunity.nextAction || "El equipo revisará la solicitud."
+    }))
+  };
+};
+
+const registerFlexComplaintInCrm = (data) => {
+  const state = loadCrmState();
+  const now = crmStamp();
+  const contact = getOrCreateCrmContact(state, data, now);
+  let opportunity = state.opportunities.find((item) => item.contactId === contact.id);
+
+  if (!opportunity) {
+    opportunity = buildFlexOpportunity(data, contact, now, {
+      source: "Chat Flex - Incidencia",
+      serviceOverride: "Señalización vertical y horizontal"
+    });
+    opportunity.project.description = `Incidencia reportada: ${opportunity.project.description}`;
+    opportunity.nextAction = "Revisar incidencia reportada por el cliente.";
+    opportunity.history[0].nextAction = opportunity.nextAction;
+    state.opportunities.unshift(opportunity);
+    state.tasks.unshift(...buildCrmTasks(opportunity));
+  }
+
+  const description = flexField(data, "descripcion") || "El cliente reportó una incidencia sin detalle.";
+  const location = flexField(data, "proyecto", "ubicacion");
+  opportunity.lastContactDate = today;
+  opportunity.updatedAt = now;
+  opportunity.nextAction = "Revisar incidencia reportada por el cliente.";
+  if (location && !opportunity.project.location) opportunity.project.location = location;
+  opportunity.history.push({
+    stage: opportunity.stage,
+    date: now,
+    owner: opportunity.owner,
+    nextAction: opportunity.nextAction
+  });
+  state.activities.unshift({
+    id: createCrmId("activity"),
+    opportunityId: opportunity.id,
+    type: "Incidencia del cliente",
+    channel: "Chat Flex",
+    message: description,
+    owner: opportunity.owner,
+    createdAt: now
+  });
+  state.tasks.unshift({
+    id: createCrmId("task"),
+    opportunityId: opportunity.id,
+    title: "Atender incidencia del cliente",
+    detail: description,
+    owner: opportunity.owner,
+    due: flexField(data, "urgencia") === "Alta" ? today : "",
+    done: false,
+    createdAt: now
+  });
+  state.notifications.unshift({
+    id: createCrmId("note"),
+    opportunityId: opportunity.id,
+    title: "Nueva incidencia reportada",
+    detail: `${contact.name} reportó una incidencia por Flex. Revisar el historial de la oportunidad.`,
+    createdAt: now
+  });
+  state.selectedId = opportunity.id;
+  saveCrmState(state);
+  return opportunity;
+};
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const data = new FormData(form);
@@ -293,6 +518,15 @@ const flexMessages = document.querySelector("[data-flex-messages]");
 const flexStatus = document.querySelector("[data-flex-status]");
 const flexMic = document.querySelector("[data-flex-mic]");
 const flexInput = flexForm?.querySelector("textarea");
+const flexQuoteToggle = document.querySelector("[data-flex-quote-toggle]");
+const flexStatusToggle = document.querySelector("[data-flex-status-toggle]");
+const flexComplaintToggle = document.querySelector("[data-flex-complaint-toggle]");
+const flexQuoteForm = document.querySelector("[data-flex-quote-form]");
+const flexStatusForm = document.querySelector("[data-flex-status-form]");
+const flexComplaintForm = document.querySelector("[data-flex-complaint-form]");
+const flexQuoteNote = document.querySelector("[data-flex-quote-note]");
+const flexStatusNote = document.querySelector("[data-flex-status-note]");
+const flexComplaintNote = document.querySelector("[data-flex-complaint-note]");
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const speech = "speechSynthesis" in window ? window.speechSynthesis : null;
 
@@ -301,11 +535,24 @@ let flexRecognition = null;
 let flexListening = false;
 let flexTranscript = "";
 let flexSpeechQueue = [];
+let activeFlexCrmContext = null;
 
 const setFlexStatus = (message) => {
   if (flexStatus) {
     flexStatus.textContent = message;
   }
+};
+
+const showFlexCrmForm = (formToShow) => {
+  [flexQuoteForm, flexStatusForm, flexComplaintForm].forEach((formElement) => {
+    if (formElement) formElement.hidden = formElement !== formToShow;
+  });
+  formToShow?.scrollIntoView({ block: "nearest" });
+};
+
+const addFlexActionReply = (text) => {
+  addFlexMessage("bot", text);
+  speakFlex(text);
 };
 
 const addFlexMessage = (role, text) => {
@@ -375,7 +622,16 @@ const speakFlex = (text) => {
 };
 
 const localFlexReply = (message) => {
-  const lower = message.toLowerCase();
+  const lower = normalizeCrmText(message);
+  if (lower.match(/crear|solicitar/) && lower.match(/cotiz|propuesta/)) {
+    return "Puedo registrar la solicitud directamente en el CRM. Use el botón Solicitar cotización y complete los datos del proyecto.";
+  }
+  if (lower.match(/estado|avance|seguimiento|solicitud/)) {
+    return "Puedo consultar el avance de una solicitud. Use Consultar solicitud e ingrese el correo o teléfono utilizado al registrarla.";
+  }
+  if (lower.match(/queja|incidencia|problema|reclamo/)) {
+    return "Puedo registrar la incidencia en el CRM para que el equipo la atienda. Use Reportar incidencia y describa lo ocurrido.";
+  }
   if (lower.match(/m2|m²|metro cuadrado|area|área/)) {
     return "Para estimar m², multiplique largo por ancho. Por ejemplo, una superficie de 40 m por 6 m equivale a 240 m². Con ese dato, ubicación y condición de la vía, el equipo puede preparar una cotización más precisa.";
   }
@@ -402,7 +658,11 @@ const askFlex = async (message) => {
     const response = await fetch("/api/flex", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, history: flexHistory.slice(-8) })
+      body: JSON.stringify({
+        message,
+        history: flexHistory.slice(-8),
+        crmContext: activeFlexCrmContext
+      })
     });
 
     if (!response.ok) {
@@ -430,6 +690,61 @@ flexToggle?.addEventListener("click", () => {
 flexClose?.addEventListener("click", () => {
   flexPanel.hidden = true;
   flexToggle?.setAttribute("aria-expanded", "false");
+});
+
+flexQuoteToggle?.addEventListener("click", () => showFlexCrmForm(flexQuoteForm));
+flexStatusToggle?.addEventListener("click", () => showFlexCrmForm(flexStatusForm));
+flexComplaintToggle?.addEventListener("click", () => showFlexCrmForm(flexComplaintForm));
+
+document.querySelector("[data-flex-quote-close]")?.addEventListener("click", () => showFlexCrmForm(null));
+document.querySelector("[data-flex-status-close]")?.addEventListener("click", () => showFlexCrmForm(null));
+document.querySelector("[data-flex-complaint-close]")?.addEventListener("click", () => showFlexCrmForm(null));
+
+flexQuoteForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const opportunity = createFlexQuoteInCrm(new FormData(flexQuoteForm));
+  const quantities = opportunity.quantities;
+  const measurements = [
+    quantities.m2 ? `${quantities.m2} m²` : "",
+    quantities.m3 ? `${quantities.m3} m³` : "",
+    quantities.metrosLineales ? `${quantities.metrosLineales} m lineales` : "",
+    quantities.senales ? `${quantities.senales} señales` : ""
+  ].filter(Boolean);
+  const summary = measurements.length ? ` Cantidades preliminares: ${measurements.join(", ")}.` : "";
+  flexQuoteNote.textContent = `Solicitud ${opportunity.id} guardada en el CRM.${summary}`;
+  addFlexActionReply(`Listo. Registré su solicitud de ${opportunity.service} en el CRM con el número ${opportunity.id}. El equipo de Ventas tiene creada la tarea de revisión técnica y le contactará por correo o WhatsApp.`);
+  flexQuoteForm.reset();
+});
+
+flexStatusForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const context = getSafeFlexCrmContext(new FormData(flexStatusForm));
+  activeFlexCrmContext = context.opportunities.length ? context : null;
+  if (!context.opportunities.length) {
+    flexStatusNote.textContent = "No encontramos una solicitud con esos datos en este navegador.";
+    addFlexActionReply("No encontré una solicitud con ese correo o teléfono. Verifique los datos usados al registrarla o cree una nueva solicitud de cotización.");
+    return;
+  }
+
+  flexStatusNote.textContent = `${context.opportunities.length} solicitud(es) encontrada(s).`;
+  const summary = context.opportunities.map((item, index) =>
+    `${index + 1}. ${item.service}, etapa: ${item.stage}, ubicación: ${item.location}. Próxima acción: ${item.nextAction}`
+  ).join(" ");
+  addFlexActionReply(`Encontré ${context.opportunities.length} solicitud(es). ${summary}`);
+});
+
+flexComplaintForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const data = new FormData(flexComplaintForm);
+  if (!flexField(data, "correo", "telefono")) {
+    flexComplaintNote.textContent = "Indique un correo o teléfono para poder dar seguimiento.";
+    return;
+  }
+
+  const opportunity = registerFlexComplaintInCrm(data);
+  flexComplaintNote.textContent = `Incidencia registrada en la oportunidad ${opportunity.id}.`;
+  addFlexActionReply(`La incidencia quedó registrada en el CRM con el número ${opportunity.id}. El equipo debe revisar la tarea creada y darle seguimiento por el canal de contacto indicado.`);
+  flexComplaintForm.reset();
 });
 
 const submitFlexMessage = async () => {
