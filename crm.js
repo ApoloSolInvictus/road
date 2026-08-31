@@ -86,6 +86,9 @@ const quoteForm = document.querySelector("[data-quote-form]");
 const quotePreview = document.querySelector("[data-quote-preview]");
 const quoteNote = document.querySelector("[data-quote-note]");
 const activeContext = document.querySelector("[data-active-context]");
+const demoButton = document.querySelector("[data-crm-demo]");
+const clearButton = document.querySelector("[data-crm-clear]");
+const exportButton = document.querySelector("[data-crm-export]");
 
 let state = loadState();
 
@@ -497,6 +500,7 @@ async function saveOpportunity(opportunity) {
   });
   state.selectedId = opportunity.id;
   saveState();
+  return opportunity;
 }
 
 function getFilteredOpportunities() {
@@ -923,34 +927,210 @@ function clearLocalData({ skipConfirm = false } = {}) {
   return true;
 }
 
+function demoDate(offsetDays) {
+  const date = new Date();
+  date.setDate(date.getDate() + offsetDays);
+  return date.toISOString().slice(0, 10);
+}
+
+function demoStamp(offsetDays, hour = 9, minute = 0) {
+  const date = new Date();
+  date.setDate(date.getDate() + offsetDays);
+  date.setHours(hour, minute, 0, 0);
+  return date.toLocaleString("es-CR", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+
+function buildDemoHistory(stage, owner, nextAction) {
+  const commercialFlow = [
+    "Solicitud recibida",
+    "Datos pendientes",
+    "Revisión técnica",
+    "Visita técnica requerida",
+    "Cotización en preparación",
+    "Cotización enviada",
+    "Seguimiento",
+    "Negociación o ajustes"
+  ];
+  const stages = stage === "Perdida o descartada"
+    ? [...commercialFlow, stage]
+    : stage === "Servicio ejecutado"
+      ? [...commercialFlow, "Ganada", stage]
+      : stage === "Ganada"
+        ? [...commercialFlow, stage]
+        : commercialFlow.slice(0, commercialFlow.indexOf(stage) + 1 || 1);
+
+  return stages
+    .map((stageName, index, stages) => ({
+      stage: stageName,
+      date: demoStamp(index - stages.length - 2, 8 + (index % 7), index % 2 ? 30 : 0),
+      owner,
+      nextAction: index === stages.length - 1 ? nextAction : `Avanzar a ${stages[index + 1]}.`
+    }))
+    .reverse();
+}
+
+function addDemoActivity(opportunity, { type, channel, message, offset = -1, owner = opportunity.owner }) {
+  state.activities.unshift({
+    id: createId("activity"),
+    opportunityId: opportunity.id,
+    type,
+    channel,
+    message,
+    owner,
+    createdAt: demoStamp(offset, 10, 15)
+  });
+}
+
+function addDemoTask(opportunity, { title, detail, owner = opportunity.owner, dueOffset = 1, done = false }) {
+  state.tasks.unshift({
+    id: createId("task"),
+    opportunityId: opportunity.id,
+    title,
+    detail,
+    owner,
+    due: demoDate(dueOffset),
+    done,
+    createdAt: demoStamp(-2, 9, 45)
+  });
+}
+
+function addDemoNotification(opportunity, title, detail, offset = -1) {
+  state.notifications.unshift({
+    id: createId("note"),
+    opportunityId: opportunity.id,
+    title,
+    detail,
+    createdAt: demoStamp(offset, 11, 0)
+  });
+}
+
+function addDemoQuote(opportunity, quote) {
+  state.quotes.unshift({
+    id: createId("quote"),
+    opportunityId: opportunity.id,
+    version: quote.version || 1,
+    approvedPrice: getNumber(quote.approvedPrice),
+    scope: quote.scope || "",
+    exclusions: quote.exclusions || "",
+    technicalNotes: quote.technicalNotes || "",
+    estimatedTerm: quote.estimatedTerm || "",
+    validity: quote.validity || "15 días naturales",
+    createdAt: demoStamp(quote.createdOffset || -3, 10, 0),
+    updatedAt: demoStamp(quote.updatedOffset || -1, 15, 30),
+    sentAt: quote.sentOffset === undefined ? "" : demoStamp(quote.sentOffset, 16, 0)
+  });
+}
+
+function enrichDemoOpportunity(opportunity, sample) {
+  state.tasks = state.tasks.filter((task) => task.opportunityId !== opportunity.id);
+  opportunity.service = sample.servicio;
+  opportunity.stage = sample.stage;
+  opportunity.owner = sample.responsable;
+  opportunity.project.urgency = sample.urgencia;
+  opportunity.nextAction = sample.proximaAccion;
+  opportunity.lossReason = sample.lossReason || "";
+  opportunity.files = sample.files || [];
+  opportunity.lastContactDate = demoDate(sample.lastContactOffset ?? -1);
+  opportunity.updatedAt = demoStamp(sample.lastContactOffset ?? -1, 14, 0);
+  opportunity.history = buildDemoHistory(sample.stage, sample.responsable, sample.proximaAccion);
+  opportunity.aiReview = {
+    ...buildAiReview(opportunity),
+    service: sample.servicio,
+    urgency: sample.urgencia,
+    recommendedStage: sample.stage,
+    nextAction: sample.proximaAccion,
+    updatedAt: demoStamp(sample.lastContactOffset ?? -1, 13, 30)
+  };
+
+  if (sample.quote) addDemoQuote(opportunity, sample.quote);
+  sample.activities?.forEach((activity) => addDemoActivity(opportunity, activity));
+  sample.tasks?.forEach((task) => addDemoTask(opportunity, task));
+  addDemoNotification(
+    opportunity,
+    "Automatización lista",
+    `${opportunity.client.name}: ${opportunity.nextAction}. Motor IA: ${buildAiReview(opportunity).source === "openai" ? "OpenAI" : "respaldo local"}.`,
+    sample.lastContactOffset ?? -1
+  );
+}
+
 async function seedDemo() {
   clearLocalData({ skipConfirm: true });
+  const originalDemoLabel = demoButton?.textContent || "Crear demo";
 
   const samples = [
+    {
+      cliente: "Parque Empresarial La Lima",
+      contacto: "Daniela Castro",
+      telefono: "+506 7100 1840",
+      correo: "operaciones@lalimabusiness.cr",
+      preferencia: "Ambos",
+      fuente: "Formulario web",
+      ubicacion: "Entrada norte, Ruta 10, La Lima",
+      provincia: "Cartago",
+      canton: "Cartago",
+      coordenadas: "9.8831, -83.9456",
+      servicio: "Señalización vertical y horizontal",
+      urgencia: "Media",
+      fechaInicio: demoDate(18),
+      descripcion: "Solicitud nueva para renovar señalización vertical de acceso, pasos peatonales internos y flechas de circulación en parque empresarial.",
+      largo: "240",
+      ancho: "7",
+      espesor: "",
+      metrosLineales: "620",
+      senales: "28",
+      responsable: "Ventas",
+      monto: "6800000",
+      probabilidad: "30",
+      proximaAccion: "Validar datos recibidos y asignar revisión técnica inicial.",
+      stage: "Solicitud recibida",
+      files: ["croquis-acceso-la-lima.pdf", "fotos-entrada-norte.zip"],
+      lastContactOffset: 0,
+      tasks: [
+        { title: "Confirmar recepción con cliente", detail: "Enviar confirmación y explicar próximos pasos del flujo comercial.", dueOffset: 0 },
+        { title: "Asignar responsable técnico", detail: "Definir si atiende Ingeniería o Ventas técnicas.", owner: "Gerencia", dueOffset: 1 }
+      ],
+      activities: [
+        { type: "Solicitud recibida", channel: "Formulario web", message: "El formulario ingresó con ubicación, cantidades preliminares y adjuntos de referencia.", offset: 0 }
+      ]
+    },
     {
       cliente: "Condominio Alto del Oeste",
       contacto: "María Jiménez",
       telefono: "+506 8888 1122",
       correo: "maria@altodeloeste.cr",
-      preferencia: "Ambos",
-      fuente: "Formulario web",
-      ubicacion: "Acceso principal, Santa Ana",
+      preferencia: "WhatsApp",
+      fuente: "WhatsApp",
+      ubicacion: "Acceso principal y curva interna, Santa Ana",
       provincia: "San José",
       canton: "Santa Ana",
-      coordenadas: "9.932, -84.182",
+      coordenadas: "9.9320, -84.1820",
       servicio: "Flex Beam",
       urgencia: "Alta",
-      fechaInicio: today(),
-      descripcion: "Instalar baranda Flex Beam en curva de ingreso con riesgo por desnivel. Hay tránsito interno activo.",
+      fechaInicio: demoDate(6),
+      descripcion: "Instalar baranda Flex Beam en curva de ingreso con riesgo por desnivel, tránsito interno activo, jardín lateral y necesidad de terminales seguros.",
       largo: "86",
       ancho: "",
       espesor: "",
       metrosLineales: "86",
-      senales: "",
+      senales: "4",
       responsable: "Ventas",
       monto: "7200000",
       probabilidad: "45",
-      proximaAccion: "Solicitar fotos y coordinar visita técnica."
+      proximaAccion: "Solicitar cantidad final de terminales y fotos del talud antes de visita.",
+      stage: "Datos pendientes",
+      files: ["ubicacion-flex-beam.kmz", "foto-curva-ingreso-1.jpg"],
+      lastContactOffset: -1,
+      tasks: [
+        { title: "Solicitar información adicional", detail: "Confirmar terminales, postes especiales y fotografías del desnivel.", dueOffset: 0 },
+        { title: "Preparar agenda de visita", detail: "Reservar espacio tentativo para inspección de curva interna.", owner: "Ingeniería", dueOffset: 1 }
+      ],
+      activities: [
+        { type: "WhatsApp recibido", channel: "WhatsApp", message: "Cliente envió ubicación y video corto; falta confirmar terminales y fotos completas.", offset: -1 },
+        { type: "Borrador IA", channel: "WhatsApp", message: "OpenAI preparó preguntas para completar la solicitud de Flex Beam.", offset: -1 }
+      ]
     },
     {
       cliente: "Constructora Norte Vial",
@@ -959,60 +1139,477 @@ async function seedDemo() {
       correo: "er@cnv.cr",
       preferencia: "Correo",
       fuente: "Referido",
-      ubicacion: "Proyecto industrial en El Coyol",
+      ubicacion: "Proyecto industrial El Coyol, acceso de carga pesada",
       provincia: "Alajuela",
       canton: "Alajuela",
-      coordenadas: "",
+      coordenadas: "9.9804, -84.2531",
       servicio: "Base granular y mezcla asfáltica",
       urgencia: "Media",
-      fechaInicio: "",
-      descripcion: "Preparar acceso interno con base granular y carpeta asfáltica para ingreso de camiones.",
+      fechaInicio: demoDate(21),
+      descripcion: "Preparar acceso interno con base granular y carpeta asfáltica para ingreso de camiones articulados. La base existente tiene zonas blandas.",
       largo: "120",
       ancho: "5.5",
       espesor: "12",
-      metrosLineales: "",
-      senales: "",
+      metrosLineales: "120",
+      senales: "6",
       responsable: "Ingeniería",
       monto: "18500000",
       probabilidad: "60",
-      proximaAccion: "Revisar espesores y condición de base existente."
+      proximaAccion: "Revisar espesores, condición de base existente y cálculo de m3.",
+      stage: "Revisión técnica",
+      files: ["plano-acceso-coyol.pdf", "levantamiento-medidas.xlsx", "fotos-base-existente.zip"],
+      lastContactOffset: -2,
+      tasks: [
+        { title: "Revisión técnica", detail: "Validar m2, m3, drenajes y zonas blandas reportadas.", owner: "Ingeniería", dueOffset: 0 },
+        { title: "Preparar observaciones", detail: "Definir exclusiones para bacheo, nivelación y compactación.", owner: "Ingeniería", dueOffset: 1 }
+      ],
+      activities: [
+        { type: "Correo recibido", channel: "Correo", message: "Constructora compartió planos y tabla preliminar de medidas.", offset: -2 },
+        { type: "Nota interna", channel: "CRM", message: "Se recomienda revisión de base y validación de espesor antes de cotizar.", owner: "Ingeniería", offset: -2 }
+      ]
     },
     {
-      cliente: "Municipalidad en consulta",
-      contacto: "Unidad Técnica",
-      telefono: "+506 2222 0000",
-      correo: "",
-      preferencia: "WhatsApp",
+      cliente: "Municipalidad de Puntarenas",
+      contacto: "Ing. Paola Méndez",
+      telefono: "+506 2661 9040",
+      correo: "unidadtecnica@puntarenas.go.cr",
+      preferencia: "Ambos",
       fuente: "Llamada",
-      ubicacion: "Centro urbano",
-      provincia: "Cartago",
-      canton: "Cartago",
-      coordenadas: "",
+      ubicacion: "Avenida Central y alrededores del mercado municipal",
+      provincia: "Puntarenas",
+      canton: "Puntarenas",
+      coordenadas: "9.9763, -84.8330",
       servicio: "Demarcación vial y cierres de obra",
-      urgencia: "Media",
-      fechaInicio: "",
-      descripcion: "Demarcación de líneas, flechas y apoyo para cierre temporal durante mantenimiento nocturno.",
-      largo: "",
-      ancho: "",
+      urgencia: "Alta",
+      fechaInicio: demoDate(9),
+      descripcion: "Demarcación de líneas, flechas, pasos peatonales y cierre temporal nocturno durante mantenimiento vial en zona comercial activa.",
+      largo: "980",
+      ancho: "6.8",
       espesor: "",
-      metrosLineales: "430",
-      senales: "",
+      metrosLineales: "1960",
+      senales: "18",
       responsable: "Ventas",
       monto: "3900000",
-      probabilidad: "35",
-      proximaAccion: "Solicitar plano, horario de cierre y símbolos requeridos."
+      probabilidad: "55",
+      proximaAccion: "Coordinar visita técnica nocturna y validar esquema de manejo vial.",
+      stage: "Visita técnica requerida",
+      files: ["mapa-intervencion-centro.pdf", "fotos-pasos-peatonales.zip"],
+      lastContactOffset: -1,
+      tasks: [
+        { title: "Coordinar visita técnica", detail: "Confirmar horario nocturno, puntos críticos y seguridad vial.", owner: "Ingeniería", dueOffset: 0 },
+        { title: "Solicitar esquema vial", detail: "Pedir plano de cierres, desvíos y horarios autorizados.", dueOffset: 1 }
+      ],
+      activities: [
+        { type: "Llamada registrada", channel: "Teléfono", message: "La municipalidad solicita atención rápida por zona comercial y alto tránsito.", offset: -1 },
+        { type: "Solicitud de planos", channel: "Correo", message: "Se pidió esquema de manejo vial y lista de símbolos requeridos.", offset: -1 }
+      ]
+    },
+    {
+      cliente: "Zona Franca Global Park",
+      contacto: "Roberto Salas",
+      telefono: "+506 2293 4455",
+      correo: "mantenimiento@globalpark.cr",
+      preferencia: "Correo",
+      fuente: "Cliente existente",
+      ubicacion: "Calles internas del parque, Heredia",
+      provincia: "Heredia",
+      canton: "Belén",
+      coordenadas: "9.9795, -84.1837",
+      servicio: "Señalización vertical y horizontal",
+      urgencia: "Media",
+      fechaInicio: demoDate(14),
+      descripcion: "Renovación de señalización horizontal, instalación de señales de alto, límite de velocidad y rutas de evacuación internas.",
+      largo: "1500",
+      ancho: "7.2",
+      espesor: "",
+      metrosLineales: "3200",
+      senales: "46",
+      responsable: "Ingeniería",
+      monto: "12400000",
+      probabilidad: "70",
+      proximaAccion: "Completar alcance y solicitar aprobación interna de precio.",
+      stage: "Cotización en preparación",
+      files: ["plano-rutas-internas.pdf", "inventario-senales.xlsx", "fotos-parque.zip"],
+      lastContactOffset: -3,
+      quote: {
+        approvedPrice: "0",
+        scope: "Suministro e instalación de señalización vertical, pintura vial horizontal, flechas direccionales, pasos peatonales y leyendas de seguridad interna.",
+        exclusions: "No incluye obra civil, reparación de carpeta, permisos externos ni trabajos fuera del horario coordinado.",
+        technicalNotes: "Cantidades preliminares sujetas a validación de plano final y recorrido técnico.",
+        estimatedTerm: "Pendiente de validación",
+        validity: "15 días naturales",
+        createdOffset: -2,
+        updatedOffset: -1
+      },
+      tasks: [
+        { title: "Completar cotización", detail: "Agregar exclusiones, observaciones técnicas y cantidades validadas.", owner: "Ingeniería", dueOffset: 0 },
+        { title: "Solicitar aprobación interna", detail: "Gerencia debe aprobar precio antes de registrar envío.", owner: "Gerencia", dueOffset: 1 }
+      ],
+      activities: [
+        { type: "Revisión técnica", channel: "CRM", message: "Se completó recorrido virtual con plano y fotografías.", owner: "Ingeniería", offset: -2 },
+        { type: "Borrador de cotización", channel: "CRM", message: "Se creó versión 1 pendiente de precio aprobado.", owner: "Ventas", offset: -1 }
+      ]
+    },
+    {
+      cliente: "Universidad Central Campus Este",
+      contacto: "Laura Vargas",
+      telefono: "+506 2205 8810",
+      correo: "infraestructura@universidadcentral.ac.cr",
+      preferencia: "Ambos",
+      fuente: "Correo",
+      ubicacion: "Parqueos y accesos peatonales, Montes de Oca",
+      provincia: "San José",
+      canton: "Montes de Oca",
+      coordenadas: "9.9361, -84.0510",
+      servicio: "Demarcación vial y cierres de obra",
+      urgencia: "Media",
+      fechaInicio: demoDate(12),
+      descripcion: "Demarcación de parqueos, flechas, pasos peatonales, zonas de carga y cierre parcial por fases para no interrumpir clases.",
+      largo: "760",
+      ancho: "8",
+      espesor: "",
+      metrosLineales: "1840",
+      senales: "22",
+      responsable: "Ventas",
+      monto: "9600000",
+      probabilidad: "65",
+      proximaAccion: "Dar seguimiento a la cotización enviada en 2 días.",
+      stage: "Cotización enviada",
+      files: ["plano-campus-parqueos.pdf", "render-circulacion.png", "fotos-campus.zip"],
+      lastContactOffset: -1,
+      quote: {
+        approvedPrice: "9350000",
+        scope: "Demarcación horizontal de parqueos, flechas, pasos peatonales, zonas de carga y apoyo de cierre por fases.",
+        exclusions: "No incluye reparación de losas, remoción profunda de pintura vieja ni permisos municipales.",
+        technicalNotes: "Trabajo recomendado por sectores para mantener circulación interna.",
+        estimatedTerm: "4 noches de trabajo",
+        validity: "20 días naturales",
+        createdOffset: -4,
+        updatedOffset: -2,
+        sentOffset: -1
+      },
+      tasks: [
+        { title: "Primer seguimiento de cotización", detail: "Confirmar recepción de propuesta y resolver dudas del alcance.", dueOffset: 1 },
+        { title: "Preparar versión 2 si solicitan fases", detail: "Separar parqueos A, B y acceso peatonal en partidas.", owner: "Ingeniería", dueOffset: 3 }
+      ],
+      activities: [
+        { type: "Cotización enviada", channel: "Correo", message: "Se envió versión 1 aprobada con alcance, exclusiones, plazo y vigencia.", offset: -1 },
+        { type: "WhatsApp de apoyo", channel: "WhatsApp", message: "Se notificó a Laura que la propuesta quedó enviada al correo.", offset: -1 }
+      ]
+    },
+    {
+      cliente: "Bodega Fría Pacífico",
+      contacto: "Marco Solano",
+      telefono: "+506 8720 3321",
+      correo: "marco.solano@bf-pacifico.cr",
+      preferencia: "WhatsApp",
+      fuente: "Formulario web",
+      ubicacion: "Acceso a andenes refrigerados, Esparza",
+      provincia: "Puntarenas",
+      canton: "Esparza",
+      coordenadas: "9.9977, -84.6642",
+      servicio: "Base granular y mezcla asfáltica",
+      urgencia: "Alta",
+      fechaInicio: demoDate(5),
+      descripcion: "Rehabilitar acceso a andenes refrigerados con base granular y mezcla asfáltica. Tránsito de camiones requiere intervención por ventanas cortas.",
+      largo: "95",
+      ancho: "9.5",
+      espesor: "10",
+      metrosLineales: "95",
+      senales: "10",
+      responsable: "Ingeniería",
+      monto: "22100000",
+      probabilidad: "72",
+      proximaAccion: "Realizar segundo seguimiento y confirmar ventana de ejecución.",
+      stage: "Seguimiento",
+      files: ["medidas-andenes.xlsx", "fotos-baches.zip", "plano-operacion.pdf"],
+      lastContactOffset: -4,
+      quote: {
+        approvedPrice: "21650000",
+        scope: "Preparación de base granular, compactación, colocación de mezcla asfáltica y señalización temporal de seguridad.",
+        exclusions: "No incluye obras hidráulicas mayores, sustitución de subrasante profunda ni horarios no aprobados.",
+        technicalNotes: "Se recomienda trabajar por ventanas para mantener operación logística.",
+        estimatedTerm: "2 días hábiles por ventana",
+        validity: "15 días naturales",
+        createdOffset: -7,
+        updatedOffset: -5,
+        sentOffset: -4
+      },
+      tasks: [
+        { title: "Segundo seguimiento comercial", detail: "Cliente no ha confirmado ventana de ejecución; contactar por WhatsApp.", dueOffset: 0 },
+        { title: "Programar revisión si no responde", detail: "Si no hay respuesta, pasar a pausa y revisar en 5 días.", owner: "Ventas", dueOffset: 5 }
+      ],
+      activities: [
+        { type: "Cotización enviada", channel: "Correo", message: "Propuesta enviada y confirmada por WhatsApp.", offset: -4 },
+        { type: "Seguimiento 1", channel: "WhatsApp", message: "Cliente indica que revisará con operaciones la ventana de intervención.", offset: -2 }
+      ]
+    },
+    {
+      cliente: "Terminal Logística Moín",
+      contacto: "Karla Thompson",
+      telefono: "+506 2798 6100",
+      correo: "operaciones@moinlogistica.cr",
+      preferencia: "Ambos",
+      fuente: "Llamada",
+      ubicacion: "Acceso de contenedores y patios de maniobra, Moín",
+      provincia: "Limón",
+      canton: "Limón",
+      coordenadas: "10.0014, -83.0836",
+      servicio: "Demarcación vial y cierres de obra",
+      urgencia: "Alta",
+      fechaInicio: demoDate(7),
+      descripcion: "Demarcación de patios de maniobra, rutas de camiones, pasos peatonales operativos y cierres parciales por bloques sin detener logística.",
+      largo: "1320",
+      ancho: "9",
+      espesor: "",
+      metrosLineales: "4100",
+      senales: "38",
+      responsable: "Gerencia",
+      monto: "26400000",
+      probabilidad: "68",
+      proximaAccion: "Validar propuesta por bloques operativos y preparar reunión de aprobación.",
+      stage: "Cotización en preparación",
+      files: ["plano-patios-moin.pdf", "rutas-contenedores.xlsx", "fotos-patio-maniobra.zip"],
+      lastContactOffset: -2,
+      quote: {
+        approvedPrice: "0",
+        scope: "Demarcación de rutas internas, patios de maniobra, pasos peatonales, flechas direccionales y apoyo de cierres parciales por bloques.",
+        exclusions: "No incluye reparación de superficie, cierres portuarios no coordinados ni trabajos fuera de áreas indicadas.",
+        technicalNotes: "Se recomienda dividir la ejecución por bloques para mantener continuidad logística.",
+        estimatedTerm: "Pendiente de confirmar por bloques",
+        validity: "12 días naturales",
+        createdOffset: -3,
+        updatedOffset: -1
+      },
+      tasks: [
+        { title: "Preparar propuesta por bloques", detail: "Separar patios, accesos y rutas de camiones en partidas.", owner: "Gerencia", dueOffset: 0 },
+        { title: "Confirmar horarios operativos", detail: "Validar ventanas con operaciones y seguridad industrial.", owner: "Ingeniería", dueOffset: 1 }
+      ],
+      activities: [
+        { type: "Llamada operativa", channel: "Teléfono", message: "Cliente solicita propuesta que no detenga tránsito de contenedores.", owner: "Gerencia", offset: -2 },
+        { type: "Análisis IA", channel: "CRM", message: "OpenAI sugiere cotizar por bloques y pedir horarios operativos.", owner: "Ventas", offset: -1 }
+      ]
+    },
+    {
+      cliente: "Concesionaria Ruta 27",
+      contacto: "Andrés Brenes",
+      telefono: "+506 2588 7000",
+      correo: "mantenimiento@ruta27.cr",
+      preferencia: "Correo",
+      fuente: "Referido",
+      ubicacion: "Rampa de intercambio, tramo oeste",
+      provincia: "San José",
+      canton: "Escazú",
+      coordenadas: "9.9305, -84.1439",
+      servicio: "Flex Beam",
+      urgencia: "Alta",
+      fechaInicio: demoDate(10),
+      descripcion: "Reposición e instalación de Flex Beam en rampa de intercambio con tránsito de alta velocidad, terminales abatibles y control nocturno.",
+      largo: "310",
+      ancho: "",
+      espesor: "",
+      metrosLineales: "310",
+      senales: "12",
+      responsable: "Gerencia",
+      monto: "38700000",
+      probabilidad: "82",
+      proximaAccion: "Ajustar alcance por terminales y validar horario nocturno solicitado.",
+      stage: "Negociación o ajustes",
+      files: ["kmz-tramo-ruta27.kmz", "fotos-rampa.zip", "esquema-cierre-nocturno.pdf"],
+      lastContactOffset: -1,
+      quote: {
+        version: 2,
+        approvedPrice: "37450000",
+        scope: "Suministro e instalación de Flex Beam, postes, terminales, elementos reflectivos y apoyo de seguridad vial nocturna.",
+        exclusions: "No incluye reparaciones estructurales fuera del tramo, expropiaciones, permisos especiales ni cierres adicionales no pactados.",
+        technicalNotes: "Versión ajustada por terminales abatibles y trabajo nocturno.",
+        estimatedTerm: "5 noches de trabajo",
+        validity: "10 días naturales",
+        createdOffset: -8,
+        updatedOffset: -1,
+        sentOffset: -1
+      },
+      tasks: [
+        { title: "Preparar ajuste de cotización", detail: "Separar terminales y control nocturno en partidas claras.", owner: "Gerencia", dueOffset: 0 },
+        { title: "Reunión de cierre", detail: "Coordinar llamada con mantenimiento para aprobar versión 2.", owner: "Ventas", dueOffset: 1 }
+      ],
+      activities: [
+        { type: "Reunión técnica", channel: "Correo", message: "Cliente solicita ajustar terminales y confirmar disponibilidad nocturna.", owner: "Gerencia", offset: -1 },
+        { type: "Negociación", channel: "CRM", message: "Probabilidad sube por urgencia y alcance validado.", owner: "Ventas", offset: -1 }
+      ]
+    },
+    {
+      cliente: "Condominio Vista Real",
+      contacto: "Sofía Araya",
+      telefono: "+506 8891 7744",
+      correo: "administracion@vistareal.cr",
+      preferencia: "Ambos",
+      fuente: "Cliente existente",
+      ubicacion: "Calles internas y accesos de visitantes, Curridabat",
+      provincia: "San José",
+      canton: "Curridabat",
+      coordenadas: "9.9152, -84.0354",
+      servicio: "Señalización vertical y horizontal",
+      urgencia: "Baja",
+      fechaInicio: demoDate(28),
+      descripcion: "Renovación de señalización interna del condominio, zonas de velocidad reducida, pasos peatonales y numeración de parqueos.",
+      largo: "540",
+      ancho: "5.8",
+      espesor: "",
+      metrosLineales: "1120",
+      senales: "34",
+      responsable: "Ventas",
+      monto: "8300000",
+      probabilidad: "100",
+      proximaAccion: "Coordinar fecha de inicio y solicitar orden de compra.",
+      stage: "Ganada",
+      files: ["orden-compra-vista-real.pdf", "plano-condominio.pdf", "fotos-parqueos.zip"],
+      lastContactOffset: -1,
+      quote: {
+        approvedPrice: "8120000",
+        scope: "Demarcación interna, señales verticales, pasos peatonales, leyendas de velocidad y parqueos numerados.",
+        exclusions: "No incluye reparación de superficie ni pintura de cordones fuera del plano aprobado.",
+        technicalNotes: "Cliente aprueba ejecución por sectores para reducir afectación a residentes.",
+        estimatedTerm: "3 días hábiles",
+        validity: "Aceptada",
+        createdOffset: -10,
+        updatedOffset: -3,
+        sentOffset: -8
+      },
+      tasks: [
+        { title: "Solicitar orden de compra", detail: "Confirmar número de OC y datos de facturación.", dueOffset: 0 },
+        { title: "Coordinar inicio", detail: "Programar cuadrilla y materiales para arranque.", owner: "Ingeniería", dueOffset: 2 }
+      ],
+      activities: [
+        { type: "Cierre ganado", channel: "Correo", message: "Cliente aprueba propuesta y solicita coordinación de fecha.", offset: -1 },
+        { type: "Nota interna", channel: "CRM", message: "Pasar a coordinación operativa cuando llegue OC.", owner: "Ventas", offset: -1 }
+      ]
+    },
+    {
+      cliente: "Residencial Los Laureles",
+      contacto: "Comité de infraestructura",
+      telefono: "+506 2430 1188",
+      correo: "comite@loslaureles.cr",
+      preferencia: "Correo",
+      fuente: "Correo",
+      ubicacion: "Acceso principal y calle secundaria, Grecia",
+      provincia: "Alajuela",
+      canton: "Grecia",
+      coordenadas: "10.0731, -84.3110",
+      servicio: "Base granular y mezcla asfáltica",
+      urgencia: "Baja",
+      fechaInicio: demoDate(45),
+      descripcion: "Solicitud de rehabilitación de acceso residencial con base granular, nivelación y carpeta asfáltica. Presupuesto del comité está limitado.",
+      largo: "180",
+      ancho: "4.8",
+      espesor: "8",
+      metrosLineales: "180",
+      senales: "8",
+      responsable: "Gerencia",
+      monto: "17600000",
+      probabilidad: "0",
+      proximaAccion: "Registrar descarte y dejar contacto para futura etapa presupuestaria.",
+      stage: "Perdida o descartada",
+      lossReason: "Presupuesto insuficiente para el alcance solicitado",
+      files: ["solicitud-comite.pdf", "fotos-calle-secundaria.zip"],
+      lastContactOffset: -6,
+      quote: {
+        approvedPrice: "17150000",
+        scope: "Nivelación, base granular, compactación y colocación de carpeta asfáltica en acceso residencial.",
+        exclusions: "No incluye drenajes nuevos, ampliación de vía ni reparación de aceras.",
+        technicalNotes: "Se recomendó dividir en dos etapas, pero el presupuesto no cubre la primera fase.",
+        estimatedTerm: "4 días hábiles",
+        validity: "15 días naturales",
+        createdOffset: -14,
+        updatedOffset: -9,
+        sentOffset: -8
+      },
+      tasks: [
+        { title: "Cerrar oportunidad", detail: "Registrar motivo de pérdida y programar revisión futura.", owner: "Gerencia", dueOffset: 0, done: true },
+        { title: "Revisión futura", detail: "Contactar en próximo ciclo presupuestario.", dueOffset: 30 }
+      ],
+      activities: [
+        { type: "Aviso de cierre", channel: "Correo", message: "Cliente descarta por presupuesto y agradece alternativa por etapas.", offset: -6 },
+        { type: "Motivo de pérdida", channel: "CRM", message: "Presupuesto insuficiente para el alcance solicitado.", owner: "Gerencia", offset: -6 }
+      ]
+    },
+    {
+      cliente: "Hotel Bahía Serena",
+      contacto: "Natalia Quirós",
+      telefono: "+506 2670 4400",
+      correo: "mantenimiento@bahiaserena.cr",
+      preferencia: "WhatsApp",
+      fuente: "WhatsApp",
+      ubicacion: "Ingreso turístico y parqueo principal, Playas del Coco",
+      provincia: "Guanacaste",
+      canton: "Carrillo",
+      coordenadas: "10.5501, -85.6969",
+      servicio: "Demarcación vial y cierres de obra",
+      urgencia: "Media",
+      fechaInicio: demoDate(3),
+      descripcion: "Demarcación de parqueo, flechas de circulación, zonas de carga y cierres parciales para ejecutar antes de alta ocupación.",
+      largo: "420",
+      ancho: "6.4",
+      espesor: "",
+      metrosLineales: "1380",
+      senales: "16",
+      responsable: "Ingeniería",
+      monto: "11800000",
+      probabilidad: "100",
+      proximaAccion: "Registrar servicio ejecutado, adjuntar cierre fotográfico y preparar postventa.",
+      stage: "Servicio ejecutado",
+      files: ["acta-entrega-bahia-serena.pdf", "cierre-fotografico.zip", "plano-final-demarcacion.pdf"],
+      lastContactOffset: -1,
+      quote: {
+        approvedPrice: "11450000",
+        scope: "Demarcación de parqueo, flechas, zonas de carga, pasos peatonales y cierres parciales durante ejecución.",
+        exclusions: "No incluye pintura de fachadas, obra civil ni trabajos fuera del área contratada.",
+        technicalNotes: "Servicio completado antes de alta ocupación; se adjunta cierre fotográfico.",
+        estimatedTerm: "2 días hábiles",
+        validity: "Aceptada",
+        createdOffset: -18,
+        updatedOffset: -2,
+        sentOffset: -14
+      },
+      tasks: [
+        { title: "Postventa", detail: "Enviar agradecimiento, solicitar testimonio y validar satisfacción.", dueOffset: 1 },
+        { title: "Archivar expediente", detail: "Guardar acta, fotos y versión final de cotización.", owner: "Ventas", dueOffset: 2 }
+      ],
+      activities: [
+        { type: "Servicio ejecutado", channel: "CRM", message: "Trabajo finalizado y recibido por mantenimiento del hotel.", owner: "Ingeniería", offset: -1 },
+        { type: "Cierre fotográfico", channel: "WhatsApp", message: "Se compartieron fotografías finales y acta de entrega.", offset: -1 }
+      ]
     }
   ];
 
-  if (formNote) formNote.textContent = "Creando demo con revisión IA de OpenAI...";
+  try {
+    if (demoButton) {
+      demoButton.disabled = true;
+      demoButton.textContent = "Creando demo...";
+    }
 
-  for (const sample of samples) {
-    const data = new FormData();
-    Object.entries(sample).forEach(([key, value]) => data.set(key, value));
-    await saveOpportunity(opportunityFromForm(data));
+    for (const [index, sample] of samples.entries()) {
+      if (formNote) formNote.textContent = `Creando demo completo con OpenAI... ${index + 1}/${samples.length}`;
+      const data = new FormData();
+      Object.entries(sample).forEach(([key, value]) => {
+        if (!["activities", "files", "lastContactOffset", "lossReason", "quote", "stage", "tasks"].includes(key)) {
+          data.set(key, value);
+        }
+      });
+      const opportunity = await saveOpportunity(opportunityFromForm(data));
+      enrichDemoOpportunity(opportunity, sample);
+    }
+
+    state.selectedId = state.opportunities.find((opportunity) => opportunity.stage === "Cotización enviada")?.id || state.opportunities[0]?.id || null;
+    saveState();
+    if (formNote) formNote.textContent = "Demo completo creado: pipeline, IA, tareas, comunicaciones, cotizaciones e historial listos para presentar.";
+    renderAll();
+  } finally {
+    if (demoButton) {
+      demoButton.disabled = false;
+      demoButton.textContent = originalDemoLabel;
+    }
   }
-  if (formNote) formNote.textContent = "Demo creado. Puede limpiar los datos locales y volver a generarlo cuando lo necesite.";
-  renderAll();
 }
 
 form?.addEventListener("submit", async (event) => {
@@ -1101,11 +1698,11 @@ taskList?.addEventListener("change", (event) => {
   control?.addEventListener("input", renderAll);
 });
 
-document.querySelector("[data-crm-demo]")?.addEventListener("click", seedDemo);
+demoButton?.addEventListener("click", seedDemo);
 
-document.querySelector("[data-crm-clear]")?.addEventListener("click", () => clearLocalData());
+clearButton?.addEventListener("click", () => clearLocalData());
 
-document.querySelector("[data-crm-export]")?.addEventListener("click", () => {
+exportButton?.addEventListener("click", () => {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
