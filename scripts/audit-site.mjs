@@ -9,6 +9,7 @@ const requiredFiles = [
   "styles.css",
   "app.js",
   "api/flex.js",
+  "api/crm-ai.js",
   "vercel.json",
   "assets/logo-roads-solutions.jpeg",
   "assets/hero-road-solutions.png",

@@ -1,4 +1,5 @@
 const STORAGE_KEY = "roadsSolutionsCrm.v1";
+const CRM_AI_ENDPOINT = "/api/crm-ai";
 
 const STAGES = [
   "Solicitud recibida",
@@ -239,7 +240,7 @@ function requiresVisit(opportunity, missing) {
   return Boolean((rule?.visit && hasLocation) || complexText || missing.length >= 4 || hasTechnicalMeasures);
 }
 
-function buildAiReview(opportunity) {
+function buildLocalAiReview(opportunity) {
   const missing = getMissingData(opportunity);
   const visit = requiresVisit(opportunity, missing);
   const quantities = opportunity.quantities;
@@ -273,7 +274,68 @@ function buildAiReview(opportunity) {
     draft,
     urgency: opportunity.project.urgency,
     complexity: visit || missing.length > 2 ? "Media / Alta" : "Baja / Media",
-    quantities: quantityText || "Sin cantidades preliminares suficientes."
+    quantities: quantityText || "Sin cantidades preliminares suficientes.",
+    nextAction: missing.length ? "Solicitar información adicional" : opportunity.nextAction,
+    recommendedStage: missing.length ? "Datos pendientes" : visit ? "Visita técnica requerida" : "Revisión técnica",
+    source: "local"
+  };
+}
+
+function buildAiReview(opportunity) {
+  return opportunity?.aiReview || buildLocalAiReview(opportunity);
+}
+
+function normalizeClientReview(review, opportunity, fallback) {
+  const validService = Object.keys(SERVICE_RULES).includes(review?.service) ? review.service : fallback.service;
+  const validUrgency = ["Alta", "Media", "Baja"].includes(review?.urgency) ? review.urgency : fallback.urgency;
+  const validComplexity = ["Baja", "Media", "Alta", "Baja / Media", "Media / Alta"].includes(review?.complexity)
+    ? review.complexity
+    : fallback.complexity;
+  const validStage = STAGES.includes(review?.recommendedStage) ? review.recommendedStage : fallback.recommendedStage;
+  const list = (value, fallbackList) => Array.isArray(value) ? value.map((item) => String(item || "").trim()).filter(Boolean).slice(0, 8) : fallbackList;
+
+  return {
+    service: validService,
+    missing: list(review?.missing, fallback.missing),
+    visit: typeof review?.visit === "boolean" ? review.visit : fallback.visit,
+    summary: String(review?.summary || fallback.summary).trim(),
+    questions: list(review?.questions, fallback.questions),
+    draft: String(review?.draft || fallback.draft).trim(),
+    urgency: validUrgency,
+    complexity: validComplexity,
+    quantities: String(review?.quantities || fallback.quantities).trim(),
+    nextAction: String(review?.nextAction || fallback.nextAction || opportunity.nextAction).trim(),
+    recommendedStage: validStage,
+    source: review?.source === "openai" ? "openai" : fallback.source
+  };
+}
+
+async function requestOpenAiReview(opportunity) {
+  const fallback = buildLocalAiReview(opportunity);
+
+  try {
+    const response = await fetch(CRM_AI_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ opportunity })
+    });
+
+    if (!response.ok) throw new Error(`CRM AI ${response.status}`);
+    const data = await response.json();
+    return normalizeClientReview(data.review, opportunity, fallback);
+  } catch (error) {
+    console.warn("CRM AI fallback", error);
+    return fallback;
+  }
+}
+
+function applyAiReview(opportunity, review) {
+  opportunity.service = review.service;
+  opportunity.project.urgency = review.urgency;
+  opportunity.nextAction = review.nextAction || opportunity.nextAction;
+  opportunity.aiReview = {
+    ...review,
+    updatedAt: nowStamp()
   };
 }
 
@@ -400,10 +462,14 @@ function opportunityFromForm(formData) {
   };
 }
 
-function saveOpportunity(opportunity) {
+async function saveOpportunity(opportunity) {
   opportunity.contactId = upsertContact(opportunity);
-  const review = buildAiReview(opportunity);
-  const nextStage = review.missing.length ? "Datos pendientes" : review.visit ? "Visita técnica requerida" : "Revisión técnica";
+  const review = await requestOpenAiReview(opportunity);
+  applyAiReview(opportunity, review);
+  const stageFromReview = ["Datos pendientes", "Revisión técnica", "Visita técnica requerida", "Cotización en preparación"].includes(review.recommendedStage)
+    ? review.recommendedStage
+    : "";
+  const nextStage = stageFromReview || (review.missing.length ? "Datos pendientes" : review.visit ? "Visita técnica requerida" : "Revisión técnica");
 
   opportunity.stage = nextStage;
   opportunity.history.push({
@@ -418,7 +484,7 @@ function saveOpportunity(opportunity) {
   state.notifications.unshift({
     id: createId("note"),
     opportunityId: opportunity.id,
-    title: "Confirmación al cliente preparada",
+    title: review.source === "openai" ? "Confirmación al cliente preparada por OpenAI" : "Confirmación al cliente preparada",
     detail: review.draft,
     createdAt: nowStamp()
   });
@@ -426,7 +492,7 @@ function saveOpportunity(opportunity) {
     id: createId("note"),
     opportunityId: opportunity.id,
     title: "Notificación interna",
-    detail: `${opportunity.owner} debe atender ${opportunity.service} para ${opportunity.client.name}. Urgencia: ${opportunity.project.urgency}.`,
+    detail: `${opportunity.owner} debe atender ${opportunity.service} para ${opportunity.client.name}. Urgencia: ${opportunity.project.urgency}. Motor IA: ${review.source === "openai" ? "OpenAI" : "reglas locales"}.`,
     createdAt: nowStamp()
   });
   state.selectedId = opportunity.id;
@@ -560,6 +626,7 @@ function renderSelected() {
     <h3>${escapeHtml(review.service)}</h3>
     <div class="crm-ai-summary">
       ${fieldRow("Resumen", review.summary)}
+      ${fieldRow("Motor IA", review.source === "openai" ? "OpenAI" : "Respaldo local")}
       ${fieldRow("Urgencia", review.urgency)}
       ${fieldRow("Complejidad", review.complexity)}
       ${fieldRow("Visita técnica", review.visit ? "Recomendada" : "No indispensable con los datos actuales")}
@@ -856,7 +923,7 @@ function clearLocalData({ skipConfirm = false } = {}) {
   return true;
 }
 
-function seedDemo() {
+async function seedDemo() {
   clearLocalData({ skipConfirm: true });
 
   const samples = [
@@ -937,23 +1004,29 @@ function seedDemo() {
     }
   ];
 
-  samples.forEach((sample) => {
+  if (formNote) formNote.textContent = "Creando demo con revisión IA de OpenAI...";
+
+  for (const sample of samples) {
     const data = new FormData();
     Object.entries(sample).forEach(([key, value]) => data.set(key, value));
-    saveOpportunity(opportunityFromForm(data));
-  });
+    await saveOpportunity(opportunityFromForm(data));
+  }
   if (formNote) formNote.textContent = "Demo creado. Puede limpiar los datos locales y volver a generarlo cuando lo necesite.";
   renderAll();
 }
 
-form?.addEventListener("submit", (event) => {
+form?.addEventListener("submit", async (event) => {
   event.preventDefault();
   const opportunity = opportunityFromForm(new FormData(form));
-  saveOpportunity(opportunity);
+  formNote.textContent = "Consultando OpenAI para clasificar la oportunidad y preparar automatizaciones...";
+  await saveOpportunity(opportunity);
   form.reset();
   probabilityInput.value = "35";
   probabilityLabel.textContent = "35%";
-  formNote.textContent = "Oportunidad creada, tareas generadas y revisión IA preparada.";
+  const review = buildAiReview(opportunity);
+  formNote.textContent = review.source === "openai"
+    ? "Oportunidad creada con automatizaciones de OpenAI."
+    : "Oportunidad creada con respaldo local porque OpenAI no respondió.";
   renderAll();
 });
 

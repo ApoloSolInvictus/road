@@ -14,15 +14,18 @@ Sitio premium para Roads & Solutions S.A., empresa costarricense enfocada en seg
 El proyecto está listo para desplegarse en Vercel con:
 
 - Sitio estático principal.
-- Endpoint serverless `api/flex.js` para el agente IA.
+- Endpoint serverless `api/flex.js` para el agente IA público.
+- Endpoint serverless `api/crm-ai.js` para automatizaciones internas del CRM con OpenAI.
 - Página `crm.html` como base visual del login CRM.
 - `vercel.json` con URLs limpias y headers iniciales.
 
 Variables requeridas en Vercel:
 
 - `OPENAI_API_KEY`
-- `OPENAI_MODEL` opcional, por defecto `gpt-5.6-luna`
+- `OPENAI_MODEL` opcional, por defecto `gpt-5.6`
+- `OPENAI_CRM_MODEL` opcional para automatizaciones del CRM, por defecto usa `OPENAI_MODEL`
 - `FLEX_MAX_OUTPUT_TOKENS` opcional, por defecto `1800`
+- `CRM_AI_MAX_OUTPUT_TOKENS` opcional, por defecto `1200`
 
 Comandos:
 
@@ -41,7 +44,7 @@ Comandos:
 
 ## CRM y automatización
 
-El formulario público crea solicitudes en el CRM local y el panel privado usa Firebase Authentication para el acceso por correo y contraseña.
+El formulario público crea solicitudes en el CRM local y el panel privado usa Firebase Authentication para el acceso por correo y contraseña. La revisión IA del CRM consulta `api/crm-ai.js` para clasificar oportunidades con OpenAI desde Vercel, sin exponer `OPENAI_API_KEY` en el navegador. Si OpenAI no responde, el CRM conserva reglas locales de respaldo para crear tareas y seguimiento básico.
 
 ### Configurar Firebase Auth
 
