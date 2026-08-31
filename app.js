@@ -621,6 +621,9 @@ const speakFlex = (text) => {
   speakNextFlexChunk();
 };
 
+const formatFlexReply = (text) =>
+  String(text || "").replace(/(^|\n)\s*[-–—]\s+/g, "$1+ ").trim();
+
 const localFlexReply = (message) => {
   const lower = normalizeCrmText(message);
   if (lower.match(/crear|solicitar/) && lower.match(/cotiz|propuesta/)) {
@@ -670,9 +673,9 @@ const askFlex = async (message) => {
     }
 
     const data = await response.json();
-    return data.reply || localFlexReply(message);
+    return formatFlexReply(data.reply || localFlexReply(message));
   } catch {
-    return localFlexReply(message);
+    return formatFlexReply(localFlexReply(message));
   } finally {
     setFlexStatus("Listo para orientar sobre cotizaciones, cantidades y servicios viales.");
   }
