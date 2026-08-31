@@ -52,15 +52,17 @@ const MESSAGE_TEMPLATES = {
   cierre: ({ opportunity }) => `Hola ${opportunity.client.contactPerson || opportunity.client.name}, cerraremos o dejaremos en pausa esta solicitud de ${opportunity.service} por el momento. Si el proyecto continúa, podemos reabrir la oportunidad y actualizar la información.`,
 };
 
-const DEFAULT_STATE = {
-  contacts: [],
-  opportunities: [],
-  tasks: [],
-  notifications: [],
-  activities: [],
-  quotes: [],
-  selectedId: null
-};
+function createEmptyState() {
+  return {
+    contacts: [],
+    opportunities: [],
+    tasks: [],
+    notifications: [],
+    activities: [],
+    quotes: [],
+    selectedId: null
+  };
+}
 
 const form = document.querySelector("[data-opportunity-form]");
 const pipeline = document.querySelector("[data-pipeline]");
@@ -77,6 +79,7 @@ const formNote = document.querySelector("[data-crm-form-note]");
 const messageForm = document.querySelector("[data-message-form]");
 const messageTemplate = document.querySelector("[data-message-template]");
 const messageBody = document.querySelector("[data-message-body]");
+const messageNote = document.querySelector("[data-message-note]");
 const activityList = document.querySelector("[data-activity-list]");
 const quoteForm = document.querySelector("[data-quote-form]");
 const quotePreview = document.querySelector("[data-quote-preview]");
@@ -89,13 +92,13 @@ function loadState() {
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
     return {
-      ...DEFAULT_STATE,
+      ...createEmptyState(),
       ...parsed,
       activities: parsed?.activities || [],
       quotes: parsed?.quotes || []
     };
   } catch {
-    return { ...DEFAULT_STATE };
+    return createEmptyState();
   }
 }
 
@@ -626,7 +629,11 @@ function renderCommunicationAndQuote() {
   const opportunity = getActiveOpportunity();
   if (!opportunity) {
     if (activeContext) activeContext.textContent = "Seleccione una oportunidad";
+    if (messageForm) messageForm.reset();
+    if (messageBody) messageBody.value = "";
+    if (messageNote) messageNote.textContent = "La comunicación quedará registrada en el historial de la oportunidad.";
     if (activityList) activityList.innerHTML = `<p class="crm-empty">Seleccione una oportunidad para ver su historial.</p>`;
+    if (quoteForm) quoteForm.reset();
     if (quotePreview) quotePreview.innerHTML = `<p class="crm-empty">Seleccione una oportunidad para preparar una cotización.</p>`;
     if (quoteNote) quoteNote.textContent = "Sin cotización guardada para esta oportunidad.";
     return;
@@ -825,7 +832,33 @@ function registerQuoteSend() {
   renderAll();
 }
 
+function resetCrmControls() {
+  form?.reset();
+  if (probabilityInput) probabilityInput.value = "35";
+  if (probabilityLabel) probabilityLabel.textContent = "35%";
+  if (formNote) formNote.textContent = "La oportunidad se guardará en el CRM local y generará tareas automáticas.";
+  if (searchInput) searchInput.value = "";
+  if (urgencyFilter) urgencyFilter.value = "";
+  if (ownerFilter) ownerFilter.value = "";
+  messageForm?.reset();
+  if (messageBody) messageBody.value = "";
+  if (messageNote) messageNote.textContent = "La comunicación quedará registrada en el historial de la oportunidad.";
+  quoteForm?.reset();
+  if (quoteNote) quoteNote.textContent = "Sin cotización guardada para esta oportunidad.";
+}
+
+function clearLocalData({ skipConfirm = false } = {}) {
+  if (!skipConfirm && !confirm("¿Desea limpiar los datos locales del CRM?")) return false;
+  localStorage.removeItem(STORAGE_KEY);
+  state = createEmptyState();
+  resetCrmControls();
+  renderAll();
+  return true;
+}
+
 function seedDemo() {
+  clearLocalData({ skipConfirm: true });
+
   const samples = [
     {
       cliente: "Condominio Alto del Oeste",
@@ -909,6 +942,7 @@ function seedDemo() {
     Object.entries(sample).forEach(([key, value]) => data.set(key, value));
     saveOpportunity(opportunityFromForm(data));
   });
+  if (formNote) formNote.textContent = "Demo creado. Puede limpiar los datos locales y volver a generarlo cuando lo necesite.";
   renderAll();
 }
 
@@ -996,12 +1030,7 @@ taskList?.addEventListener("change", (event) => {
 
 document.querySelector("[data-crm-demo]")?.addEventListener("click", seedDemo);
 
-document.querySelector("[data-crm-clear]")?.addEventListener("click", () => {
-  if (!confirm("¿Desea limpiar los datos locales del CRM?")) return;
-  state = { ...DEFAULT_STATE };
-  saveState();
-  renderAll();
-});
+document.querySelector("[data-crm-clear]")?.addEventListener("click", () => clearLocalData());
 
 document.querySelector("[data-crm-export]")?.addEventListener("click", () => {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
